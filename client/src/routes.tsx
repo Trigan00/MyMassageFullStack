@@ -5,10 +5,11 @@ import RegisterPage from "./pages/RegisterPage";
 import AdminPage from "./pages/AdminPage";
 import VideosPage from "./pages/VideosPage";
 import { consts } from "./utils/routsConsts";
+import LessonPage from "./pages/LessonPage";
 
-export const authRoutes = [
-  //Можно добавить роут оплаты прайма
-];
+// export const authRoutes = [
+//   //Можно добавить роут оплаты прайма
+// ];
 
 export const adminRoutes = [
   {
@@ -33,5 +34,9 @@ export const publicRoutes = [
   {
     path: consts.VIDEOS_ROUTE,
     Component: VideosPage,
+  },
+  {
+    path: consts.LESSON_ROUTE + "/:id",
+    Component: LessonPage,
   },
 ];

@@ -11,6 +11,7 @@ const useVideos = () => {
   const [noPrimeLoading, setNoPrimeLoading] = useState<boolean>(false);
 
   useEffect(() => {
+    setNoPrimeLoading(true);
     const q = query(collection(db, "videos"));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       const videos: any = [];
@@ -23,11 +24,12 @@ const useVideos = () => {
       });
       setAdminNoPrimeVideos(videos);
     });
-
+    setNoPrimeLoading(false);
     return () => unsubscribe();
   }, []);
 
   useEffect(() => {
+    setPrimeLoading(true);
     if (!prime) return;
     const q = query(collection(db, "primevideos"));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
@@ -41,7 +43,7 @@ const useVideos = () => {
       });
       setAdminPrimeVideos(videos);
     });
-
+    setPrimeLoading(false);
     return () => unsubscribe();
   }, [prime]);
 
@@ -52,7 +54,10 @@ const useVideos = () => {
     getDocs(collection(db, "primevideos"))
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
-          newArr.push({ id: doc.id, data: doc.data() });
+          newArr.push({
+            id: doc.id,
+            name: doc.data().name,
+          });
         });
       })
       .catch((e) => console.log(e))
@@ -67,7 +72,10 @@ const useVideos = () => {
     getDocs(collection(db, "videos"))
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
-          newArr.push({ id: doc.id, data: doc.data() });
+          newArr.push({
+            id: doc.id,
+            name: doc.data().name,
+          });
         });
       })
       .catch((e) => console.log(e))

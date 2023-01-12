@@ -27,9 +27,8 @@ const DeleteVideo: React.FC = () => {
     setValue(newValue);
   };
 
-  const deleteHandler = async (id: string, fileName: string) => {
-    console.log(fileName);
-    deleteFiles(fileName, value ? "videos" : "primevideos", id);
+  const deleteHandler = async (id: string /*, fileName: string*/) => {
+    deleteFiles(/*fileName, */ value ? "videos" : "primevideos", id);
   };
 
   return (
@@ -56,7 +55,9 @@ const DeleteVideo: React.FC = () => {
                     <IconButton
                       edge="end"
                       aria-label="delete"
-                      onClick={() => deleteHandler(video.id, video.fileName)}
+                      onClick={() =>
+                        deleteHandler(video.id /*, video.fileName*/)
+                      }
                     >
                       <Icon>delete</Icon>
                     </IconButton>
@@ -84,7 +85,9 @@ const DeleteVideo: React.FC = () => {
                     <IconButton
                       edge="end"
                       aria-label="delete"
-                      onClick={() => deleteHandler(video.id, video.fileName)}
+                      onClick={() =>
+                        deleteHandler(video.id /*, video.fileName*/)
+                      }
                     >
                       <Icon>delete</Icon>
                     </IconButton>

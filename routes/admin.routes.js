@@ -1,7 +1,8 @@
-// const { db } = require("../firebase");
 const Router = require("express");
 const router = new Router();
 const EasyYandexS3 = require("easy-yandex-s3").default;
+const { db } = require("../firebase");
+const crypto = require("crypto");
 const multer = require("multer");
 const upload = multer();
 
@@ -18,13 +19,15 @@ router.post("/uploadFile", upload.single("file"), async (req, res) => {
   try {
     const {
       file,
-      body: { name },
+      body: { name, inputName, collectionName },
     } = req;
 
     const list = await s3.GetList("/massage-videos/");
-
+    let id = crypto.createHash("md5").update(name).digest("hex");
+    id += collectionName === "primevideos" ? "1" : "0";
+    console.log(id);
     for (const el of list.Contents) {
-      if (el.Key === `massage-videos/${name}`) {
+      if (el.Key === `massage-videos/${id}`) {
         return res
           .status(400)
           .json({ status: "failure", message: "Такой файл уже существует." });
@@ -34,15 +37,26 @@ router.post("/uploadFile", upload.single("file"), async (req, res) => {
     const upload = await s3.Upload(
       {
         buffer: file.buffer,
-        name: name,
+        name: id,
       },
       "/massage-videos/"
     );
-    if (upload) {
-      return res
-        .status(201)
-        .json({ status: "success", message: "file added.", info: upload });
+    if (!upload) {
+      res.status(500).json({
+        status: "failure",
+        message: "Файл не загружен в базу данных, попробуйте снова",
+      });
     }
+    const docRef = db.collection(collectionName).doc(id);
+
+    await docRef.set({
+      name: inputName,
+      fileName: name,
+      url: upload.Location,
+    });
+    return res
+      .status(201)
+      .json({ status: "success", message: "Файл добавлен." });
   } catch (error) {
     console.log(error);
     res.status(500).json({
@@ -51,19 +65,18 @@ router.post("/uploadFile", upload.single("file"), async (req, res) => {
     });
   }
 });
-router.put("/deleteFile", async (req, res) => {
+router.post("/deleteFile", async (req, res) => {
   try {
-    const { fileName } = req.body;
-    let remove = await s3.Remove(fileName);
-    if (remove) {
-      return res
-        .status(204)
-        .json({ status: "success", message: "file deleted." });
+    const { id, category } = req.body;
+    let remove = await s3.Remove(`massage-videos/${id}`);
+    if (!remove) {
+      return res.status(409).json({
+        status: "failure",
+        message: "Файл не удален из базы данных, попробуйте снова",
+      });
     }
-    return res.status(409).json({
-      status: "failure",
-      message: "Video was not deleted",
-    });
+    await db.collection(category).doc(id).delete();
+    return res.json({ status: "success", message: "Файл удален." });
   } catch (error) {
     console.log(error);
     res.status(500).json({

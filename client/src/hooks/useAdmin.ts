@@ -1,8 +1,5 @@
 import axios from "axios";
-import { addDoc, collection, deleteDoc, doc } from "firebase/firestore";
 import { useState } from "react";
-import { db } from "../firebase";
-// import { fetchVideos } from "../store/asyncActions";
 import { useTypedDispatch } from "../store/hooks/useTypedDispatch";
 import { setAlert } from "../store/slices/alertSlice";
 import { useAuth } from "./useAuth";
@@ -22,6 +19,8 @@ const useAdmin = () => {
       const data = new FormData();
       data.append("name", file.name);
       data.append("file", file);
+      data.append("inputName", inputName);
+      data.append("collectionName", collectionName);
 
       const res = await axios.post(
         `${process.env.REACT_APP_SERVERURL}/api/admin/uploadFile`,
@@ -33,34 +32,13 @@ const useAdmin = () => {
         }
       );
 
-      if (res) {
-        addDoc(collection(db, collectionName), {
-          name: inputName,
-          fileName: res.data.info.Key,
-          url: res.data.info.Location,
+      dispatch(
+        setAlert({
+          severity: "success",
+          message: res.data.message,
         })
-          .then(() => {
-            dispatch(
-              setAlert({
-                severity: "success",
-                message: "Файл успешно добавлен",
-              })
-            );
-          })
-          .catch((e) => {
-            console.log(e);
-            dispatch(
-              setAlert({
-                severity: "error",
-                message: "Что-то пошло не так, попробуйте еще раз",
-              })
-            );
-          })
-          .finally(() => {
-            setIsLoading(false);
-          });
-        setIsLoading(false);
-      }
+      );
+      setIsLoading(false);
     } catch (error: any) {
       setIsLoading(false);
       console.log(error);
@@ -73,39 +51,25 @@ const useAdmin = () => {
     }
   };
 
-  const deleteFiles = async (
-    fileName: string,
-    category: string,
-    id: string
-  ) => {
+  const deleteFiles = async (category: string, id: string) => {
     try {
       setIsLoading(true);
-      const res = await axios.put(
+      const res = await axios.post(
         `${process.env.REACT_APP_SERVERURL}/api/admin/deleteFile`,
-        { fileName },
+        { id, category },
         {
           headers: {
             authorization: "Bearer " + token,
           },
         }
       );
-
-      if (res) {
-        deleteDoc(doc(db, category, id))
-          .then()
-          .catch((e) => {
-            console.log(e);
-            dispatch(
-              setAlert({
-                severity: "error",
-                message: "Что-то пошло не так, попробуйте еще раз",
-              })
-            );
-          })
-          .finally(() => {
-            setIsLoading(false);
-          });
-      }
+      console.log(res);
+      dispatch(
+        setAlert({
+          severity: "success",
+          message: res.data.message,
+        })
+      );
       setIsLoading(false);
     } catch (error: any) {
       setIsLoading(false);
