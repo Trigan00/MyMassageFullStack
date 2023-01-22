@@ -1,13 +1,8 @@
-import { Button, Container } from "@mui/material";
+import { Container } from "@mui/material";
 // import axios from "axios";
 // import React, { useState } from "react";
-import { useAuth } from "../hooks/useAuth";
-import { useHttp } from "../hooks/useHttp";
 
 const HomePage: React.FC = () => {
-  const { token } = useAuth();
-  const { id } = useAuth();
-  const { request } = useHttp();
   // const [image, setImage] = useState<any>();
 
   // const getImage = async () => {
@@ -35,27 +30,10 @@ const HomePage: React.FC = () => {
 
   //   document.body.appendChild(outputImg);
   // };
-  const getPrimeHandler = async () => {
-    if (id) {
-      try {
-        await request(
-          `${process.env.REACT_APP_SERVERURL}/api/prime/getPrime`,
-          "POST",
-          {
-            id,
-          },
-          {
-            authorization: "Bearer " + token,
-          }
-        );
-      } catch (e) {}
-    }
-  };
 
   return (
     <Container style={{ marginTop: "20px" }}>
       <h1>Home Page</h1>
-      <Button onClick={getPrimeHandler}>Get Prime</Button>
       {/* <Button onClick={getImage}>Get Image</Button>
       <div>
         <img src={image} />

@@ -3,9 +3,12 @@ import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import AdminPage from "./pages/AdminPage";
-import VideosPage from "./pages/VideosPage";
+import AllCoursesPage from "./pages/AllCoursesPage";
 import { consts } from "./utils/routsConsts";
 import LessonPage from "./pages/LessonPage";
+import CoursePage from "./pages/CoursePage";
+import MyCoursesPage from "./pages/MyCoursesPage";
+import MyCourseInfoPage from "./pages/MyCourseInfoPage";
 
 // export const authRoutes = [
 //   //Можно добавить роут оплаты прайма
@@ -32,11 +35,27 @@ export const publicRoutes = [
     Component: RegisterPage,
   },
   {
-    path: consts.VIDEOS_ROUTE,
-    Component: VideosPage,
+    path: consts.ALLCOURSES_ROUTE,
+    Component: AllCoursesPage,
+  },
+  {
+    path: consts.MYCOURSES_ROUTE,
+    Component: MyCoursesPage,
+  },
+  {
+    path: consts.MYCOURSES_ROUTE + "/:courseName",
+    Component: MyCourseInfoPage,
+  },
+  {
+    path: consts.ALLCOURSES_ROUTE + "/:name",
+    Component: CoursePage,
   },
   {
     path: consts.LESSON_ROUTE + "/:id",
+    Component: LessonPage,
+  },
+  {
+    path: consts.MYCOURSES_ROUTE + "/:courseName" + "/:id",
     Component: LessonPage,
   },
 ];

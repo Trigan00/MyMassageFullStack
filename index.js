@@ -3,7 +3,7 @@ const bodyParser = require("body-parser");
 const express = require("express");
 const cors = require("cors");
 const authRouter = require("./routes/auth.routes");
-const primeRouter = require("./routes/prime.routes");
+const buyCourse = require("./routes/buyCourse.routes");
 const adminRouter = require("./routes/admin.routes");
 const lessonRouter = require("./routes/lesson.routes");
 const authMiddleware = require("./middleware/auth.middleware");
@@ -19,9 +19,9 @@ app.use(cors());
 // app.use(authMiddleware.decodeToken);
 
 app.use("/api/auth", authRouter);
-app.use("/api/prime", /*authMiddleware.decodeToken,*/ primeRouter);
-app.use("/api/admin", authMiddleware.decodeToken, adminRouter);
-app.use("/api/lesson", /*videoMiddleware.validateVideo,*/ lessonRouter);
+app.use("/api/buy", buyCourse);
+app.use("/api/admin", authMiddleware.isAdmin, adminRouter);
+app.use("/api/courses", authMiddleware.decodeToken, lessonRouter);
 
 if (process.env.NODE_ENV === "production") {
   app.use("/", express.static(path.join(__dirname, "client", "build")));

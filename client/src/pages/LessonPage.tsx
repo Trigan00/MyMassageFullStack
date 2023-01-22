@@ -1,54 +1,51 @@
 import Container from "@mui/material/Container/Container";
-import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
+import { useAuthState } from "../hooks/useAuthState";
 import { useHttp } from "../hooks/useHttp";
 import { useTypedDispatch } from "../store/hooks/useTypedDispatch";
 import { setAlert } from "../store/slices/alertSlice";
 import Loader from "../UI/Loader";
 
 const LessonPage: React.FC = () => {
-  const { id } = useParams();
+  const { id, courseName } = useParams();
   const dispatch = useTypedDispatch();
-  const { request } = useHttp();
   const { token } = useAuth();
+  const { isPending } = useAuthState();
+  const { request } = useHttp();
   const [data, setData] = useState<any>();
 
-  useEffect(() => {
-    if ((id || "").substring((id || "").length - 1) === "1") {
-      if (token) {
-        foo();
-      }
-    } else {
-      foo();
-    }
-  }, [token, id, request]);
-
-  const foo = async () => {
+  const getVideoInfo = useCallback(async () => {
     try {
-      const res = await axios.get(
-        `${process.env.REACT_APP_SERVERURL}/api/lesson/${id}`,
+      const res = await request(
+        `${process.env.REACT_APP_SERVERURL}/api/courses/lesson/${id}-${courseName}`,
+        "GET",
+        null,
         {
-          headers: {
-            authorization: "Bearer " + token,
-          },
+          authorization: "Bearer " + token,
         }
       );
+
       setData(res.data);
-      console.log(res);
     } catch (error: any) {
       console.log(error);
       dispatch(
         setAlert({
           severity: "error",
-          message: error.response.data.message,
+          message: error.message,
         })
       );
     }
-  };
+  }, [courseName, dispatch, id, request, token]);
 
-  if (!data) {
+  useEffect(() => {
+    if (!isPending) {
+      getVideoInfo();
+    }
+  }, [isPending, getVideoInfo]);
+
+  if (isPending || !data) {
     return (
       <div className="FlexJustifyCentr">
         <Loader color="#1976d2" />
@@ -74,7 +71,7 @@ const LessonPage: React.FC = () => {
           controlsList="nodownload"
         >
           <source
-            src={`${process.env.REACT_APP_SERVERURL}/api/lesson/video/${id}`}
+            src={`${process.env.REACT_APP_SERVERURL}/api/courses/video/${id}token:${token}`}
             type="video/mp4"
           />
         </video>

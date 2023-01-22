@@ -1,7 +1,7 @@
 import { useTypedSelector } from "../store/hooks/useTypedSelector";
 
 export function useAuth() {
-  const { email, id, role, prime, isVerified, token } = useTypedSelector(
+  const { email, id, role, /* prime,  */ isVerified, token } = useTypedSelector(
     (state) => state.user
   );
 
@@ -10,7 +10,7 @@ export function useAuth() {
     email,
     id,
     role,
-    prime,
+    // prime,
     isVerified,
     token,
   };

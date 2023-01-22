@@ -48,9 +48,15 @@ const NavBar: React.FC = () => {
             </Typography>
             <Button
               color="inherit"
-              onClick={() => navigate(consts.VIDEOS_ROUTE)}
+              onClick={() => navigate(consts.ALLCOURSES_ROUTE)}
             >
-              Уроки
+              Курсы
+            </Button>
+            <Button
+              color="inherit"
+              onClick={() => navigate(consts.MYCOURSES_ROUTE)}
+            >
+              Мои курсы
             </Button>
 
             {isAuth ? (

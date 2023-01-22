@@ -4,7 +4,6 @@ interface UserState {
   email: string | null;
   id: string | null;
   role: string | null;
-  prime: string | null;
   isVerified: boolean | null;
   token: string | null;
 }
@@ -13,7 +12,6 @@ interface UserAction {
   email: string | null;
   id: string | null;
   role: string | null;
-  prime: string | null;
   isVerified: boolean | null;
   token: string | null;
 }
@@ -22,7 +20,6 @@ const initialState: UserState = {
   email: null,
   id: null,
   role: null,
-  prime: null,
   isVerified: null,
   token: null,
 };
@@ -35,7 +32,6 @@ const userSlice = createSlice({
       state.email = action.payload.email;
       state.id = action.payload.id;
       state.role = action.payload.role;
-      state.prime = action.payload.prime;
       state.isVerified = action.payload.isVerified;
       state.token = action.payload.token;
     },
@@ -43,7 +39,6 @@ const userSlice = createSlice({
       state.email = null;
       state.id = null;
       state.role = null;
-      state.prime = null;
       state.isVerified = null;
       state.token = null;
     },

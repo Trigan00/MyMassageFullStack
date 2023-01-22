@@ -1,16 +1,16 @@
 import React from "react";
 
 interface loaderProps {
-  color: string;
+  color?: string;
 }
 
 const Loader: React.FC<loaderProps> = ({ color }) => {
   return (
     <div className="lds-ellipsis" style={{ margin: "0 auto" }}>
-      <div style={{ backgroundColor: color }}></div>
-      <div style={{ backgroundColor: color }}></div>
-      <div style={{ backgroundColor: color }}></div>
-      <div style={{ backgroundColor: color }}></div>
+      <div style={{ backgroundColor: "#1976d2" || color }}></div>
+      <div style={{ backgroundColor: "#1976d2" || color }}></div>
+      <div style={{ backgroundColor: "#1976d2" || color }}></div>
+      <div style={{ backgroundColor: "#1976d2" || color }}></div>
     </div>
   );
 };

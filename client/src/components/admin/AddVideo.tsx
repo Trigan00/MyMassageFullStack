@@ -1,10 +1,8 @@
 import {
   Button,
-  Card,
   DialogTitle,
-  FormControlLabel,
   FormGroup,
-  Switch,
+  Paper,
   TextField,
 } from "@mui/material";
 import React, { useState } from "react";
@@ -13,23 +11,27 @@ import { useTypedDispatch } from "../../store/hooks/useTypedDispatch";
 import { setAlert } from "../../store/slices/alertSlice";
 import Loader from "../../UI/Loader";
 
-const AddVideo: React.FC = () => {
+interface AddVideoProps {
+  courseName: string;
+  fetchVideos: (name: string) => Promise<void>;
+}
+
+const AddVideo: React.FC<AddVideoProps> = ({ courseName, fetchVideos }) => {
   const { uploadFiles, isLoading } = useAdmin();
   const [name, setName] = useState<string>("");
-  const [prime, setPrime] = useState<boolean>(false);
   const [fileName, setFileName] = useState<string>("");
   const dispatch = useTypedDispatch();
 
   const onDeleteHandler = () => {
     const input = document.getElementById("upload-file") as HTMLInputElement;
-
+    setName("");
     if (input.value) {
       input.value = "";
       setFileName("Файл не выбран");
     }
   };
 
-  const onSubmit = async (e: any) => {
+  const onSubmit = async (e: { target: any; preventDefault: () => void }) => {
     e.preventDefault();
     const file = e.target[2].files[0];
     if (!file) {
@@ -41,11 +43,12 @@ const AddVideo: React.FC = () => {
       );
       return;
     }
-    uploadFiles(file, name, prime ? "primevideos" : "videos");
+    await uploadFiles(file, name, courseName);
+    fetchVideos(courseName);
   };
 
   return (
-    <Card style={{ padding: "15px" }}>
+    <Paper elevation={3} style={{ padding: "15px" }}>
       <DialogTitle style={{ textAlign: "center" }}>Добавить видео</DialogTitle>
       <form onSubmit={onSubmit} encType="multipart/form-data">
         <FormGroup>
@@ -101,25 +104,24 @@ const AddVideo: React.FC = () => {
             </div>
           </label>
 
-          <FormControlLabel
-            control={
-              <Switch
-                checked={prime}
-                onChange={() => setPrime((prev) => !prev)}
-              />
-            }
-            label="Prime"
-          />
-          {!isLoading ? (
-            <Button variant="contained" type="submit">
-              Отправить
-            </Button>
-          ) : (
-            <Loader color="#1976d2" />
-          )}
+          <div style={{ marginTop: "10px" }}>
+            {!isLoading ? (
+              <Button
+                variant="contained"
+                type="submit"
+                style={{ width: "100%" }}
+              >
+                Отправить
+              </Button>
+            ) : (
+              <div className="FlexJustifyCentr">
+                <Loader />
+              </div>
+            )}
+          </div>
         </FormGroup>
       </form>
-    </Card>
+    </Paper>
   );
 };
 

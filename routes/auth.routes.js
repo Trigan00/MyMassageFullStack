@@ -9,7 +9,7 @@ router.post("/addUser", async (req, res) => {
 
     await docRef.set({
       email,
-      prime: false,
+      courses: [],
       role: "user",
     });
 

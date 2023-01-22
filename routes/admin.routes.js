@@ -11,10 +11,37 @@ const s3 = new EasyYandexS3({
     accessKeyId: process.env.KEY_ID,
     secretAccessKey: process.env.SECRET_KEY,
   },
-  Bucket: "test-backet-ayaz", // например, "my-storage",
+  Bucket: process.env.BUCKET, // например, "my-storage",
   debug: true, // Дебаг в консоли, потом можете удалить в релизе
 });
 
+router.post("/newCourse", async (req, res) => {
+  try {
+    const { name } = req.body;
+
+    const id = crypto.createHash("md5").update(name).digest("hex");
+    const docRef = db.collection("courses").doc(id);
+    const doc = await docRef.get();
+    if (doc.exists) {
+      return res.status(400).json({
+        status: "failure",
+        message: "Курс с таким названием уже существует",
+      });
+    }
+
+    await docRef.set({
+      name: name,
+    });
+
+    return res.status(201).json({ status: "success", message: "Курс создан." });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      status: "failure",
+      message: "Something went wrong, try again",
+    });
+  }
+});
 router.post("/uploadFile", upload.single("file"), async (req, res) => {
   try {
     const {
@@ -52,7 +79,7 @@ router.post("/uploadFile", upload.single("file"), async (req, res) => {
     await docRef.set({
       name: inputName,
       fileName: name,
-      url: upload.Location,
+      // url: upload.Location,
     });
     return res
       .status(201)

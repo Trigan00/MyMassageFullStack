@@ -18,9 +18,6 @@ export const useAuthState = () => {
         const role: string | null = docSnap.exists()
           ? docSnap.data().role
           : null;
-        const prime: string | null = docSnap.exists()
-          ? docSnap.data().prime
-          : null;
 
         const token = await user.getIdToken();
         dispatch(
@@ -28,7 +25,6 @@ export const useAuthState = () => {
             email: user.email,
             id: user.uid,
             role: role,
-            prime: prime,
             isVerified: user.emailVerified,
             token: token,
           })
