@@ -35,10 +35,14 @@ class Middleware {
     try {
       const url = req.url.split("/");
 
-      const token =
-        url[1] === "video"
-          ? url[2].split("token:")[1]
-          : req.headers.authorization.split(" ")[1];
+      let token = "";
+      if (url[1] === "video") {
+        const parsedUrl = url[2].split("="); //["", "course name", "id", "token" ]
+        token = parsedUrl[3];
+      } else {
+        token = req.headers.authorization.split(" ")[1];
+      }
+
       if (!token) {
         return res.status(401).json({ message: "No authorization" });
       }

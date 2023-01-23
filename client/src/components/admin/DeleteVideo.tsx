@@ -10,11 +10,12 @@ import {
   ListItemText,
   Paper,
 } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import { Demo } from "../../UI/MyTabPanel";
 import useAdmin from "../../hooks/useAdmin";
 import Loader from "../../UI/Loader";
 import { Video } from "../../hooks/useVideos";
+import MyModal from "../../UI/MyModal";
 
 interface DeleteVideoProps {
   videos: Video[];
@@ -30,8 +31,14 @@ const DeleteVideo: React.FC<DeleteVideoProps> = ({
   fetchVideos,
 }) => {
   const { deleteFiles } = useAdmin();
+  const [modalInfo, setModalInfo] = useState<{
+    isModalOpen: boolean;
+    modalName: string;
+    deleteIsActive: boolean;
+    data: {};
+  }>({ isModalOpen: false, modalName: "", deleteIsActive: false, data: {} });
 
-  const deleteHandler = async (id: string) => {
+  const deleteHandler = async ({ id }: { id: string }) => {
     await deleteFiles(courseName, id);
     fetchVideos(courseName);
   };
@@ -50,7 +57,16 @@ const DeleteVideo: React.FC<DeleteVideoProps> = ({
                     <IconButton
                       edge="end"
                       aria-label="delete"
-                      onClick={() => deleteHandler(video.id)}
+                      onClick={() =>
+                        setModalInfo({
+                          isModalOpen: true,
+                          modalName: video.name,
+                          deleteIsActive: false,
+                          data: {
+                            id: video.id,
+                          },
+                        })
+                      }
                     >
                       <Icon>delete</Icon>
                     </IconButton>
@@ -75,6 +91,12 @@ const DeleteVideo: React.FC<DeleteVideoProps> = ({
           </List>
         </Demo>
       </Box>
+      <MyModal
+        type="Видео"
+        modalInfo={modalInfo}
+        setModalInfo={setModalInfo}
+        onDelete={deleteHandler}
+      />
     </Paper>
   );
 };

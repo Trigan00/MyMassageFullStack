@@ -7,6 +7,7 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
+  Paper,
 } from "@mui/material";
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -34,36 +35,39 @@ const MyCourseInfoPage: React.FC = () => {
   return (
     <Container style={{ marginTop: "20px" }}>
       <DialogTitle style={{ textAlign: "center" }}>{courseName}</DialogTitle>
-
-      <List>
-        {!isVideosLoading ? (
-          videos.length > 0 ? (
-            videos.map(({ name, id }) => (
-              <ListItem
-                key={id}
-                style={{ cursor: "pointer" }}
-                onClick={() =>
-                  navigate(consts.MYCOURSES_ROUTE + "/" + courseName + "/" + id)
-                }
-                secondaryAction={<span>0:00</span>}
-              >
-                <ListItemAvatar>
-                  <Avatar>
-                    <Icon>video_file</Icon>
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText primary={name} />
-              </ListItem>
-            ))
+      <Paper>
+        <List>
+          {!isVideosLoading ? (
+            videos.length > 0 ? (
+              videos.map(({ name, id }) => (
+                <ListItem
+                  key={id}
+                  style={{ cursor: "pointer" }}
+                  onClick={() =>
+                    navigate(
+                      consts.MYCOURSES_ROUTE + "/" + courseName + "/" + id
+                    )
+                  }
+                  secondaryAction={<span>0:00</span>}
+                >
+                  <ListItemAvatar>
+                    <Avatar>
+                      <Icon>video_file</Icon>
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText primary={name} />
+                </ListItem>
+              ))
+            ) : (
+              "Нет уроков"
+            )
           ) : (
-            "Нет курсов"
-          )
-        ) : (
-          <div className="FlexJustifyCentr">
-            <Loader />
-          </div>
-        )}
-      </List>
+            <div className="FlexJustifyCentr">
+              <Loader />
+            </div>
+          )}
+        </List>
+      </Paper>
     </Container>
   );
 };

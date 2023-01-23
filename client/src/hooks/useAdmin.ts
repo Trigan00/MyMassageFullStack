@@ -41,6 +41,38 @@ const useAdmin = () => {
       );
     }
   };
+
+  const deleteCourse = async (name: string) => {
+    try {
+      setIsLoading(true);
+      const res = await axios.delete(
+        `${process.env.REACT_APP_SERVERURL}/api/admin/deleteCourse/`,
+        {
+          params: {
+            key: name,
+          },
+          headers: {
+            authorization: "Bearer " + token,
+          },
+        }
+      );
+      dispatch(
+        setAlert({
+          severity: "success",
+          message: res.data.message,
+        })
+      );
+    } catch (error: any) {
+      setIsLoading(false);
+      console.log(error);
+      dispatch(
+        setAlert({
+          severity: "error",
+          message: error.response.data.message,
+        })
+      );
+    }
+  };
   const uploadFiles = async (
     file: any,
     inputName: string,
@@ -115,7 +147,7 @@ const useAdmin = () => {
     }
   };
 
-  return { uploadFiles, deleteFiles, isLoading, createNewCourse };
+  return { uploadFiles, deleteFiles, isLoading, createNewCourse, deleteCourse };
 };
 
 export default useAdmin;

@@ -40,38 +40,41 @@ const AdminPage: React.FC = () => {
   }, [fetchCourses]);
 
   return (
-    <Container style={{ marginTop: "20px", display: "flex" }}>
-      <Courses
-        setCourseName={setCourseName}
-        courseName={courseName}
-        coursesArr={courses}
-        setIsNewCourse={setIsNewCourse}
-        fetchVideos={fetchVideos}
-        isCoursesLoading={isCoursesLoading}
-      />
-      <div style={{ width: "100%" }}>
-        {isNewCourse ? (
-          <NewCourse fetchCourses={fetchCourses} />
-        ) : (
-          <>
-            <h1
-              style={{
-                textAlign: "center",
-                color: "#1976d2",
-                margin: "0 0 20px 0",
-              }}
-            >
-              {courseName}
-            </h1>
-            <AddVideo courseName={courseName} fetchVideos={fetchVideos} />
-            <DeleteVideo
-              courseName={courseName}
-              videos={videos}
-              isLoading={isVideosLoading || isCoursesLoading}
-              fetchVideos={fetchVideos}
-            />
-          </>
-        )}
+    <Container style={{ marginTop: "20px" }}>
+      <h1
+        style={{
+          textAlign: "center",
+          color: "#1976d2",
+          margin: "0 0 20px 0",
+        }}
+      >
+        {courseName}
+      </h1>
+      <div style={{ display: "flex" }}>
+        <Courses
+          setCourseName={setCourseName}
+          courseName={courseName}
+          coursesArr={courses}
+          setIsNewCourse={setIsNewCourse}
+          fetchVideos={fetchVideos}
+          isCoursesLoading={isCoursesLoading}
+          // fetchCourses={fetchCourses}
+        />
+        <div style={{ width: "100%" }}>
+          {isNewCourse || !courses.length ? (
+            <NewCourse fetchCourses={fetchCourses} />
+          ) : (
+            <>
+              <AddVideo courseName={courseName} fetchVideos={fetchVideos} />
+              <DeleteVideo
+                courseName={courseName}
+                videos={videos}
+                isLoading={isVideosLoading || isCoursesLoading}
+                fetchVideos={fetchVideos}
+              />
+            </>
+          )}
+        </div>
       </div>
     </Container>
   );

@@ -11,8 +11,8 @@ const s3 = new EasyYandexS3({
     accessKeyId: process.env.KEY_ID,
     secretAccessKey: process.env.SECRET_KEY,
   },
-  Bucket: process.env.BUCKET, // например, "my-storage",
-  debug: true, // Дебаг в консоли, потом можете удалить в релизе
+  Bucket: process.env.BUCKET,
+  debug: true,
 });
 
 router.post("/newCourse", async (req, res) => {
@@ -42,19 +42,51 @@ router.post("/newCourse", async (req, res) => {
     });
   }
 });
+router.delete("/deleteCourse/", async (req, res) => {
+  try {
+    const name = req.query.key;
+    const courseRef = db.collection(name);
+    const snapshot = await courseRef.get();
+
+    snapshot.forEach(async ({ id }) => {
+      const remove = await s3.Remove(name + "/" + id);
+      if (!remove) {
+        return res.status(500).json({
+          status: "failure",
+          message: "Файл не удален из базы данных, попробуйте снова",
+        });
+      }
+    });
+    snapshot.forEach(async ({ id }) => {
+      await courseRef.doc(id).delete();
+    });
+
+    const courseId = crypto.createHash("md5").update(name).digest("hex");
+    await db.collection("courses").doc(courseId).delete();
+
+    return res
+      .status(201)
+      .json({ status: "success", message: "Курс удален. Обновите страницу" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      status: "failure",
+      message: "Something went wrong, try again",
+    });
+  }
+});
 router.post("/uploadFile", upload.single("file"), async (req, res) => {
   try {
     const {
       file,
       body: { name, inputName, collectionName },
     } = req;
-
-    const list = await s3.GetList("/massage-videos/");
     let id = crypto.createHash("md5").update(name).digest("hex");
-    id += collectionName === "primevideos" ? "1" : "0";
-    console.log(id);
+
+    const list = await s3.GetList(collectionName);
+    console.log("upload file id: " + id);
     for (const el of list.Contents) {
-      if (el.Key === `massage-videos/${id}`) {
+      if (el.Key === `${collectionName}/${id}`) {
         return res
           .status(400)
           .json({ status: "failure", message: "Такой файл уже существует." });
@@ -66,7 +98,7 @@ router.post("/uploadFile", upload.single("file"), async (req, res) => {
         buffer: file.buffer,
         name: id,
       },
-      "/massage-videos/"
+      collectionName
     );
     if (!upload) {
       res.status(500).json({
@@ -95,7 +127,7 @@ router.post("/uploadFile", upload.single("file"), async (req, res) => {
 router.post("/deleteFile", async (req, res) => {
   try {
     const { id, category } = req.body;
-    let remove = await s3.Remove(`massage-videos/${id}`);
+    let remove = await s3.Remove(`${category}/${id}`);
     if (!remove) {
       return res.status(409).json({
         status: "failure",

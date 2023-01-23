@@ -71,7 +71,7 @@ const LessonPage: React.FC = () => {
           controlsList="nodownload"
         >
           <source
-            src={`${process.env.REACT_APP_SERVERURL}/api/courses/video/${id}token:${token}`}
+            src={`${process.env.REACT_APP_SERVERURL}/api/courses/video/=${courseName}=${id}=${token}`}
             type="video/mp4"
           />
         </video>
