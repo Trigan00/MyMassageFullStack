@@ -10,6 +10,8 @@ export type Video = {
 export type Course = {
   id: string;
   name: string;
+  price: number;
+  shortDescription: string;
 };
 
 const useVideos = () => {
@@ -43,11 +45,13 @@ const useVideos = () => {
     try {
       SetIsCoursesLoading(true);
       const data = await getDocs(collection(db, "courses"));
-      const courses: { id: string; name: string }[] = [];
+      const courses: Course[] = [];
       data.forEach((doc) => {
         courses.push({
           id: doc.id,
           name: doc.data().name,
+          price: doc.data().price,
+          shortDescription: doc.data().shortDescription,
         });
       });
       SetIsCoursesLoading(false);

@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import AddVideo from "../components/admin/AddVideo";
 import Courses from "../components/admin/Courses";
 import DeleteVideo from "../components/admin/DeleteVideo";
+import Description from "../components/admin/Description";
 import NewCourse from "../components/admin/NewCourse";
 import useVideos, { Course, Video } from "../hooks/useVideos";
 
@@ -13,6 +14,10 @@ const AdminPage: React.FC = () => {
   const [courseName, setCourseName] = useState<string>("");
   const [videos, setVideos] = useState<Video[]>([]);
   const [isNewCourse, setIsNewCourse] = useState<boolean>(false);
+  const [shortDescription, setShortDescription] = useState<string>("");
+  const [defaultValue, setDefaultValue] = useState<{ shortDesc: string }>({
+    shortDesc: "",
+  });
 
   const fetchVideos = useCallback(
     async (name: string) => {
@@ -38,6 +43,15 @@ const AdminPage: React.FC = () => {
   useEffect(() => {
     fetchCourses(true);
   }, [fetchCourses]);
+
+  useEffect(() => {
+    if (courseName) {
+      const courseIndex = courses.findIndex((el) => el.name === courseName);
+      const shortDescription = courses[courseIndex].shortDescription || "";
+      setShortDescription(shortDescription);
+      setDefaultValue({ shortDesc: shortDescription });
+    }
+  }, [courseName, courses]);
 
   return (
     <Container style={{ marginTop: "20px" }}>
@@ -71,6 +85,14 @@ const AdminPage: React.FC = () => {
                 videos={videos}
                 isLoading={isVideosLoading || isCoursesLoading}
                 fetchVideos={fetchVideos}
+              />
+              <Description
+                shortDescription={shortDescription}
+                setShortDescription={setShortDescription}
+                defaultValue={defaultValue}
+                courseID={
+                  courses[courses.findIndex((el) => el.name === courseName)].id
+                }
               />
             </>
           )}

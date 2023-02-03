@@ -17,7 +17,7 @@ const s3 = new EasyYandexS3({
 
 router.post("/newCourse", async (req, res) => {
   try {
-    const { name } = req.body;
+    const { name, price, shortDescription } = req.body;
 
     const id = crypto.createHash("md5").update(name).digest("hex");
     const docRef = db.collection("courses").doc(id);
@@ -31,6 +31,8 @@ router.post("/newCourse", async (req, res) => {
 
     await docRef.set({
       name: name,
+      price: price,
+      shortDescription: shortDescription,
     });
 
     return res.status(201).json({ status: "success", message: "Курс создан." });
@@ -136,6 +138,20 @@ router.post("/deleteFile", async (req, res) => {
     }
     await db.collection(category).doc(id).delete();
     return res.json({ status: "success", message: "Файл удален." });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      status: "failure",
+      message: "Something went wrong, try again",
+    });
+  }
+});
+router.put("/changeDescription", async (req, res) => {
+  try {
+    const { type, description, id } = req.body;
+    const courseRef = db.collection("courses").doc(id);
+    await courseRef.update({ [type]: description });
+    return res.json({ status: "success", message: "Описание изменено" });
   } catch (error) {
     console.log(error);
     res.status(500).json({

@@ -48,13 +48,13 @@ const AddVideo: React.FC<AddVideoProps> = ({ courseName, fetchVideos }) => {
   };
 
   return (
-    <Paper elevation={3} style={{ padding: "15px" }}>
+    <Paper elevation={3} sx={{ p: "15px" }}>
       <DialogTitle style={{ textAlign: "center" }}>Добавить видео</DialogTitle>
       <form onSubmit={onSubmit} encType="multipart/form-data">
         <FormGroup>
           <TextField
             id="outlined-basic"
-            label="name"
+            label="название"
             variant="outlined"
             type="text"
             size="small"

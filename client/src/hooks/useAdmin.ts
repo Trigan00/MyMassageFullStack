@@ -9,13 +9,25 @@ const useAdmin = () => {
   const dispatch = useTypedDispatch();
   const [isLoading, setIsLoading] = useState(false);
 
-  const createNewCourse = async (name: string) => {
+  const createNewCourse = async (
+    name: string,
+    price: number,
+    shortDescription: string
+  ) => {
     try {
+      if (!name.trim()) {
+        return dispatch(
+          setAlert({
+            severity: "error",
+            message: "Название курса не указано",
+          })
+        );
+      }
       setIsLoading(true);
 
       const res = await axios.post(
         `${process.env.REACT_APP_SERVERURL}/api/admin/newCourse`,
-        { name },
+        { name, price, shortDescription },
         {
           headers: {
             authorization: "Bearer " + token,
@@ -79,6 +91,14 @@ const useAdmin = () => {
     collectionName: string
   ) => {
     try {
+      if (!inputName.trim()) {
+        return dispatch(
+          setAlert({
+            severity: "error",
+            message: "Название видео не указано",
+          })
+        );
+      }
       setIsLoading(true);
       const data = new FormData();
       data.append("name", file.name);
@@ -146,8 +166,50 @@ const useAdmin = () => {
       return;
     }
   };
+  const changeDescription = async (
+    type: "shortDescription" | "fullDescription",
+    description: string,
+    id: string
+  ) => {
+    try {
+      setIsLoading(true);
+      const res = await axios.put(
+        `${process.env.REACT_APP_SERVERURL}/api/admin/changeDescription`,
+        { type, description, id },
+        {
+          headers: {
+            authorization: "Bearer " + token,
+          },
+        }
+      );
+      dispatch(
+        setAlert({
+          severity: "success",
+          message: res.data.message,
+        })
+      );
+      setIsLoading(false);
+    } catch (error: any) {
+      setIsLoading(false);
+      console.log(error);
+      dispatch(
+        setAlert({
+          severity: "error",
+          message: error.response.data.message,
+        })
+      );
+      return;
+    }
+  };
 
-  return { uploadFiles, deleteFiles, isLoading, createNewCourse, deleteCourse };
+  return {
+    uploadFiles,
+    deleteFiles,
+    createNewCourse,
+    deleteCourse,
+    changeDescription,
+    isLoading,
+  };
 };
 
 export default useAdmin;

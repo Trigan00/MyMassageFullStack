@@ -44,7 +44,7 @@ const DeleteVideo: React.FC<DeleteVideoProps> = ({
   };
 
   return (
-    <Paper elevation={3} style={{ padding: "15px", marginTop: "20px" }}>
+    <Paper elevation={3} sx={{ mt: "20px", p: "15px" }}>
       <DialogTitle style={{ textAlign: "center" }}>Список видео</DialogTitle>
       <Box sx={{ width: "100%" }}>
         <Demo>
