@@ -17,7 +17,7 @@ const s3 = new EasyYandexS3({
 
 router.post("/newCourse", async (req, res) => {
   try {
-    const { name, price, shortDescription } = req.body;
+    const { name, price, shortDescription, fullDescription } = req.body;
 
     const id = crypto.createHash("md5").update(name).digest("hex");
     const docRef = db.collection("courses").doc(id);
@@ -30,9 +30,10 @@ router.post("/newCourse", async (req, res) => {
     }
 
     await docRef.set({
-      name: name,
-      price: price,
-      shortDescription: shortDescription,
+      name,
+      price,
+      shortDescription,
+      fullDescription,
     });
 
     return res.status(201).json({ status: "success", message: "Курс создан." });

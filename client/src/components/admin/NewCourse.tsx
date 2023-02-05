@@ -16,12 +16,18 @@ const NewCourse: React.FC<NewCourseProps> = ({ fetchCourses }) => {
   const [courseName, setCourseName] = useState<string>("");
   const [coursePrice, setCoursePrice] = useState<string>("");
   const [shortDescription, setShortDescription] = useState<string>("");
+  const [fullDescription, setFullDescription] = useState<string>("");
 
   const { createNewCourse, isLoading } = useAdmin();
 
   const onSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
-    await createNewCourse(courseName, +coursePrice, shortDescription);
+    await createNewCourse(
+      courseName,
+      +coursePrice,
+      shortDescription,
+      fullDescription
+    );
     fetchCourses(false);
   };
   return (
@@ -76,6 +82,18 @@ const NewCourse: React.FC<NewCourseProps> = ({ fetchCourses }) => {
           Краткое описание
         </DialogTitle>
         <TextEditor text={shortDescription} setText={setShortDescription} />
+      </Paper>
+      <Paper elevation={3} sx={{ mt: "20px", p: "15px" }}>
+        <DialogTitle
+          style={{
+            textAlign: "center",
+            color: "#1976d2",
+            margin: "0 0 20px 0",
+          }}
+        >
+          Полное описание
+        </DialogTitle>
+        <TextEditor text={fullDescription} setText={setFullDescription} />
       </Paper>
 
       {!isLoading ? (

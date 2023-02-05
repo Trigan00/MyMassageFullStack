@@ -48,7 +48,6 @@ const MyCourseInfoPage: React.FC = () => {
                       consts.MYCOURSES_ROUTE + "/" + courseName + "/" + id
                     )
                   }
-                  secondaryAction={<span>0:00</span>}
                 >
                   <ListItemAvatar>
                     <Avatar>

@@ -12,7 +12,8 @@ const useAdmin = () => {
   const createNewCourse = async (
     name: string,
     price: number,
-    shortDescription: string
+    shortDescription: string,
+    fullDescription: string
   ) => {
     try {
       if (!name.trim()) {
@@ -27,7 +28,7 @@ const useAdmin = () => {
 
       const res = await axios.post(
         `${process.env.REACT_APP_SERVERURL}/api/admin/newCourse`,
-        { name, price, shortDescription },
+        { name, price, shortDescription, fullDescription },
         {
           headers: {
             authorization: "Bearer " + token,
@@ -163,7 +164,6 @@ const useAdmin = () => {
           message: error.response.data.message,
         })
       );
-      return;
     }
   };
   const changeDescription = async (

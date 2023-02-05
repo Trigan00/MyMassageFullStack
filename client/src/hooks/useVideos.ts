@@ -12,6 +12,7 @@ export type Course = {
   name: string;
   price: number;
   shortDescription: string;
+  fullDescription: string;
 };
 
 const useVideos = () => {
@@ -52,6 +53,7 @@ const useVideos = () => {
           name: doc.data().name,
           price: doc.data().price,
           shortDescription: doc.data().shortDescription,
+          fullDescription: doc.data().fullDescription,
         });
       });
       SetIsCoursesLoading(false);

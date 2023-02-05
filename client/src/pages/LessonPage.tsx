@@ -65,7 +65,7 @@ const LessonPage: React.FC = () => {
       <div className="FlexJustifyCentr">
         <video
           id="videoPlayer"
-          width="650"
+          width="100%"
           controls
           autoPlay
           controlsList="nodownload"

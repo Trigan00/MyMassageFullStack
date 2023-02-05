@@ -38,16 +38,7 @@ const Courses: React.FC<CoursesProps> = ({
   };
 
   return (
-    <Paper
-      elevation={3}
-      style={{
-        maxWidth: "270px",
-        width: "100%",
-        marginRight: "20px",
-        padding: " 0 10px",
-        height: "fit-content",
-      }}
-    >
+    <Paper elevation={3} className="AdminCourses">
       <h3 style={{ textAlign: "center" }}>Курсы</h3>
       {!isCoursesLoading || !isLoading ? (
         coursesArr.map(({ name, id }) => (

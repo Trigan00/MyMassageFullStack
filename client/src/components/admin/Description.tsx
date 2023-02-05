@@ -8,28 +8,32 @@ import Loader from "../../UI/Loader";
 import TextEditor from "./TextEditor";
 
 interface DescriptionProps {
-  shortDescription: string;
-  setShortDescription: React.Dispatch<React.SetStateAction<string>>;
-  defaultValue: { shortDesc: string };
+  description: string;
+  setDescription: React.Dispatch<React.SetStateAction<string>>;
+  defaultValue: string;
   courseID: string;
+  type: "shortDescription" | "fullDescription";
+  title: string;
 }
 
 const Description: React.FC<DescriptionProps> = ({
-  shortDescription,
-  setShortDescription,
+  description,
+  setDescription,
   defaultValue,
   courseID,
+  type,
+  title,
 }) => {
   const { changeDescription, isLoading } = useAdmin();
   const [isEdit, setIsEdit] = useState<boolean>(false);
 
   const resetDescription = () => {
-    setShortDescription(defaultValue.shortDesc);
+    setDescription(defaultValue);
     setIsEdit(false);
   };
 
   const onSaveHandler = async () => {
-    await changeDescription("shortDescription", shortDescription, courseID);
+    await changeDescription(type, description, courseID);
     setIsEdit(false);
   };
 
@@ -41,14 +45,14 @@ const Description: React.FC<DescriptionProps> = ({
           margin: "0 0 20px 0",
         }}
       >
-        Краткое описание
+        {title}
       </DialogTitle>
       {!isLoading ? (
         <>
           {!isEdit ? (
-            <Sanitize html={shortDescription} />
+            <Sanitize html={description} />
           ) : (
-            <TextEditor text={shortDescription} setText={setShortDescription} />
+            <TextEditor text={description} setText={setDescription} />
           )}
 
           {!isEdit ? (

@@ -15,8 +15,13 @@ const AdminPage: React.FC = () => {
   const [videos, setVideos] = useState<Video[]>([]);
   const [isNewCourse, setIsNewCourse] = useState<boolean>(false);
   const [shortDescription, setShortDescription] = useState<string>("");
-  const [defaultValue, setDefaultValue] = useState<{ shortDesc: string }>({
+  const [fullDescription, setFullDescription] = useState<string>("");
+  const [descriptionDefaultValue, setDescriptionDefaultValue] = useState<{
+    shortDesc: string;
+    fulltDesc: string;
+  }>({
     shortDesc: "",
+    fulltDesc: "",
   });
 
   const fetchVideos = useCallback(
@@ -48,13 +53,18 @@ const AdminPage: React.FC = () => {
     if (courseName) {
       const courseIndex = courses.findIndex((el) => el.name === courseName);
       const shortDescription = courses[courseIndex].shortDescription || "";
+      const fullDescription = courses[courseIndex].fullDescription || "";
       setShortDescription(shortDescription);
-      setDefaultValue({ shortDesc: shortDescription });
+      setFullDescription(fullDescription);
+      setDescriptionDefaultValue({
+        shortDesc: shortDescription,
+        fulltDesc: fullDescription,
+      });
     }
   }, [courseName, courses]);
 
   return (
-    <Container style={{ marginTop: "20px" }}>
+    <Container sx={{ mt: "20px", mb: "20px" }}>
       <h1
         style={{
           textAlign: "center",
@@ -64,7 +74,7 @@ const AdminPage: React.FC = () => {
       >
         {courseName}
       </h1>
-      <div style={{ display: "flex" }}>
+      <div className="AdminPageWrapper">
         <Courses
           setCourseName={setCourseName}
           courseName={courseName}
@@ -87,12 +97,24 @@ const AdminPage: React.FC = () => {
                 fetchVideos={fetchVideos}
               />
               <Description
-                shortDescription={shortDescription}
-                setShortDescription={setShortDescription}
-                defaultValue={defaultValue}
+                description={shortDescription}
+                setDescription={setShortDescription}
+                defaultValue={descriptionDefaultValue.shortDesc}
                 courseID={
                   courses[courses.findIndex((el) => el.name === courseName)].id
                 }
+                type={"shortDescription"}
+                title="Краткое описание"
+              />
+              <Description
+                description={fullDescription}
+                setDescription={setFullDescription}
+                defaultValue={descriptionDefaultValue.fulltDesc}
+                courseID={
+                  courses[courses.findIndex((el) => el.name === courseName)].id
+                }
+                type={"fullDescription"}
+                title="Полное описание"
               />
             </>
           )}
