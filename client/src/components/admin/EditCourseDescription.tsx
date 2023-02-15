@@ -7,7 +7,7 @@ import useAdmin from "../../hooks/useAdmin";
 import Loader from "../../UI/Loader";
 import TextEditor from "./TextEditor";
 
-interface DescriptionProps {
+interface EditCourseDescriptionProps {
   description: string;
   setDescription: React.Dispatch<React.SetStateAction<string>>;
   defaultValue: string;
@@ -16,7 +16,7 @@ interface DescriptionProps {
   title: string;
 }
 
-const Description: React.FC<DescriptionProps> = ({
+const EditCourseDescription: React.FC<EditCourseDescriptionProps> = ({
   description,
   setDescription,
   defaultValue,
@@ -93,4 +93,4 @@ const Description: React.FC<DescriptionProps> = ({
   );
 };
 
-export default Description;
+export default EditCourseDescription;

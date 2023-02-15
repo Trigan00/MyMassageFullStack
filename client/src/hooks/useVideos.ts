@@ -6,6 +6,7 @@ export type Video = {
   id: string;
   name: string;
   fileName: string;
+  description: string;
 };
 export type Course = {
   id: string;
@@ -13,6 +14,7 @@ export type Course = {
   price: number;
   shortDescription: string;
   fullDescription: string;
+  pictureUrl: string;
 };
 
 const useVideos = () => {
@@ -30,6 +32,7 @@ const useVideos = () => {
             id: doc.id,
             name: doc.data().name,
             fileName: doc.data().fileName,
+            description: doc.data().description,
           });
         });
         SetIsVideosLoading(false);
@@ -54,6 +57,7 @@ const useVideos = () => {
           price: doc.data().price,
           shortDescription: doc.data().shortDescription,
           fullDescription: doc.data().fullDescription,
+          pictureUrl: doc.data().pictureUrl,
         });
       });
       SetIsCoursesLoading(false);

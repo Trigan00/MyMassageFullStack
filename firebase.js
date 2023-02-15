@@ -7,6 +7,5 @@ initializeApp({
   credential: cert(process.env.GOOGLE_APPLICATION_CREDENTIALS),
 });
 const db = getFirestore();
-// const getAuth = getAuth();
 
 module.exports = { db, auth };

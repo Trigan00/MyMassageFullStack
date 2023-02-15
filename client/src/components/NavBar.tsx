@@ -2,18 +2,21 @@ import {
   Box,
   AppBar,
   Toolbar,
-  Typography,
   Button,
   Container,
   Icon,
+  IconButton,
+  Tooltip,
 } from "@mui/material";
 import { getAuth, signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import shortenText from "../helpers/shortenText";
 import { useAuth } from "../hooks/useAuth";
 import { useTypedDispatch } from "../store/hooks/useTypedDispatch";
 import { setAlert } from "../store/slices/alertSlice";
 import { removeUser } from "../store/slices/userSlice";
 import { consts } from "../utils/routsConsts";
+import styles from "./styles/NavBar.module.scss";
 
 const NavBar: React.FC = () => {
   const dispatch = useTypedDispatch();
@@ -33,30 +36,30 @@ const NavBar: React.FC = () => {
   };
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <Box>
       <AppBar position="static">
         <Container>
-          <Toolbar>
-            <Typography
-              variant="h6"
+          <Toolbar sx={{ padding: 0 }}>
+            <Box
+              className={styles.Logo}
               component="div"
               sx={{ flexGrow: 1 }}
               style={{ cursor: "pointer" }}
               onClick={() => navigate(consts.HOME_ROUTE)}
             >
               MyMassage
-            </Typography>
-            <Button
+            </Box>
+            {/* <Button
               color="inherit"
               onClick={() => navigate(consts.ALLCOURSES_ROUTE)}
             >
-              Курсы
-            </Button>
+              <span className={styles.NavbarText}>Курсы</span>
+            </Button> */}
             <Button
               color="inherit"
               onClick={() => navigate(consts.MYCOURSES_ROUTE)}
             >
-              Мои курсы
+              <span className={styles.NavbarText}> Мои курсы</span>
             </Button>
 
             {isAuth ? (
@@ -66,30 +69,24 @@ const NavBar: React.FC = () => {
                     color="inherit"
                     onClick={() => navigate(consts.ADMIN_ROUTE)}
                   >
-                    Админ
+                    <span className={styles.NavbarText}> Админ</span>
                   </Button>
                 )}
-                <Button color="inherit" onClick={signOutHandler}>
-                  Выйти
-                </Button>
-                <span
+
+                <div
+                  className={styles.Email}
                   style={{
-                    boxShadow:
-                      "rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset",
-                    borderRadius: "7px",
-                    padding: "4px 10px",
-                    marginRight: "10px",
-                    color: "#fff",
-                    fontWeight: "100",
-                    fontSize: "1rem",
+                    padding: isVerified ? "4px 10px" : "4px 10px 4px 35px",
                   }}
                 >
-                  {email}
-                </span>
-                {!isVerified && (
-                  <>
-                    <div
-                      style={{ cursor: "pointer" }}
+                  {!isVerified && (
+                    <IconButton
+                      sx={{
+                        cursor: "pointer",
+                        position: "absolute",
+                        left: "2px",
+                      }}
+                      size="small"
                       onClick={() =>
                         dispatch(
                           setAlert({
@@ -99,12 +96,22 @@ const NavBar: React.FC = () => {
                         )
                       }
                     >
-                      <Icon color="warning" style={{ marginLeft: "5px" }}>
+                      <Icon color="warning" /* style={{ marginLeft: "5px" }} */>
                         warning_amber
                       </Icon>
-                    </div>
-                  </>
-                )}
+                    </IconButton>
+                  )}
+                  <Tooltip title={email}>
+                    <span>{shortenText(email || "", 10)}</span>
+                  </Tooltip>
+                </div>
+                <IconButton
+                  sx={{ color: "white" }}
+                  size="small"
+                  onClick={signOutHandler}
+                >
+                  <Icon>power_settings_new</Icon>
+                </IconButton>
               </>
             ) : (
               <Button

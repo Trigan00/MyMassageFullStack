@@ -7,11 +7,12 @@ import { consts } from "../utils/routsConsts";
 const LoginPage = () => {
   return (
     <Card
-      style={{
+      sx={{
         maxWidth: "500px",
-        width: "100%",
-        margin: "40px auto 0 auto",
-        padding: "10px",
+        w: "100%",
+        m: "40px auto 0 auto",
+        p: "10px",
+        boxSizing: "border-box",
       }}
     >
       <h1>LoginPage</h1>

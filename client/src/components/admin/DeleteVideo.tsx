@@ -15,7 +15,8 @@ import { Demo } from "../../UI/MyTabPanel";
 import useAdmin from "../../hooks/useAdmin";
 import Loader from "../../UI/Loader";
 import { Video } from "../../hooks/useVideos";
-import MyModal from "../../UI/MyModal";
+import DeleteModal from "../../UI/DeleteModal";
+import EditVideoDescripiton from "./EditVideoDescripiton";
 
 interface DeleteVideoProps {
   videos: Video[];
@@ -37,6 +38,8 @@ const DeleteVideo: React.FC<DeleteVideoProps> = ({
     deleteIsActive: boolean;
     data: {};
   }>({ isModalOpen: false, modalName: "", deleteIsActive: false, data: {} });
+  const [isEdit, setIsEdit] = useState<boolean>(false);
+  const [editVideoId, setEditVideoId] = useState<string>("");
 
   const deleteHandler = async ({ id }: { id: string }) => {
     await deleteFiles(courseName, id);
@@ -54,22 +57,34 @@ const DeleteVideo: React.FC<DeleteVideoProps> = ({
                 <ListItem
                   key={video.id}
                   secondaryAction={
-                    <IconButton
-                      edge="end"
-                      aria-label="delete"
-                      onClick={() =>
-                        setModalInfo({
-                          isModalOpen: true,
-                          modalName: video.name,
-                          deleteIsActive: false,
-                          data: {
-                            id: video.id,
-                          },
-                        })
-                      }
-                    >
-                      <Icon>delete</Icon>
-                    </IconButton>
+                    <div>
+                      <IconButton
+                        sx={{ mr: "5px" }}
+                        aria-label="edit"
+                        onClick={() => {
+                          setEditVideoId(video.id);
+                          setIsEdit(true);
+                        }}
+                      >
+                        <Icon>edit</Icon>
+                      </IconButton>
+                      <IconButton
+                        edge="end"
+                        aria-label="delete"
+                        onClick={() =>
+                          setModalInfo({
+                            isModalOpen: true,
+                            modalName: video.name,
+                            deleteIsActive: false,
+                            data: {
+                              id: video.id,
+                            },
+                          })
+                        }
+                      >
+                        <Icon>delete</Icon>
+                      </IconButton>
+                    </div>
                   }
                 >
                   <ListItemAvatar>
@@ -91,11 +106,17 @@ const DeleteVideo: React.FC<DeleteVideoProps> = ({
           </List>
         </Demo>
       </Box>
-      <MyModal
+      <DeleteModal
         type="Видео"
         modalInfo={modalInfo}
         setModalInfo={setModalInfo}
         onDelete={deleteHandler}
+      />
+      <EditVideoDescripiton
+        open={isEdit}
+        setOpen={setIsEdit}
+        courseName={courseName}
+        videoId={editVideoId}
       />
     </Paper>
   );

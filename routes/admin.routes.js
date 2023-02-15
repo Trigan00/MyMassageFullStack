@@ -15,9 +15,22 @@ const s3 = new EasyYandexS3({
   debug: true,
 });
 
-router.post("/newCourse", async (req, res) => {
+const picturesS3 = new EasyYandexS3({
+  auth: {
+    accessKeyId: process.env.KEY_ID,
+    secretAccessKey: process.env.SECRET_KEY,
+  },
+  Bucket: process.env.PICTURES_BUCKET,
+  debug: true,
+});
+
+router.post("/newCourse", upload.single("file"), async (req, res) => {
   try {
-    const { name, price, shortDescription, fullDescription } = req.body;
+    // const { name, price, shortDescription, fullDescription } = req.body;
+    const {
+      file,
+      body: { name, price, shortDescription, fullDescription },
+    } = req;
 
     const id = crypto.createHash("md5").update(name).digest("hex");
     const docRef = db.collection("courses").doc(id);
@@ -29,11 +42,27 @@ router.post("/newCourse", async (req, res) => {
       });
     }
 
+    const upload = await picturesS3.Upload(
+      {
+        buffer: file.buffer,
+        name: name,
+      },
+      "/Courses Images/"
+    );
+
+    if (!upload) {
+      res.status(500).json({
+        status: "failure",
+        message: "Файл не загружен в базу данных, попробуйте снова",
+      });
+    }
+
     await docRef.set({
       name,
-      price,
+      price: +price,
       shortDescription,
       fullDescription,
+      pictureUrl: upload.Location,
     });
 
     return res.status(201).json({ status: "success", message: "Курс создан." });
@@ -60,6 +89,15 @@ router.delete("/deleteCourse/", async (req, res) => {
         });
       }
     });
+
+    const PictireRemove = await picturesS3.Remove("Courses Images/" + name);
+    if (!PictireRemove) {
+      return res.status(500).json({
+        status: "failure",
+        message: "Картинка курса не удалена из базы данных, попробуйте снова",
+      });
+    }
+
     snapshot.forEach(async ({ id }) => {
       await courseRef.doc(id).delete();
     });
@@ -82,7 +120,7 @@ router.post("/uploadFile", upload.single("file"), async (req, res) => {
   try {
     const {
       file,
-      body: { name, inputName, collectionName },
+      body: { name, inputName, collectionName, description },
     } = req;
     let id = crypto.createHash("md5").update(name).digest("hex");
 
@@ -114,6 +152,7 @@ router.post("/uploadFile", upload.single("file"), async (req, res) => {
     await docRef.set({
       name: inputName,
       fileName: name,
+      description: description,
       // url: upload.Location,
     });
     return res
@@ -147,12 +186,87 @@ router.post("/deleteFile", async (req, res) => {
     });
   }
 });
+
+router.put("/changeVideoDescription", async (req, res) => {
+  try {
+    const { id, courseName, name, description } = req.body;
+    const videoRef = db.collection(courseName).doc(id);
+    await videoRef.update({ description, name });
+    return res.json({ status: "success", message: "Описание изменено" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      status: "failure",
+      message: "Something went wrong, try again",
+    });
+  }
+});
+
 router.put("/changeDescription", async (req, res) => {
   try {
     const { type, description, id } = req.body;
     const courseRef = db.collection("courses").doc(id);
     await courseRef.update({ [type]: description });
     return res.json({ status: "success", message: "Описание изменено" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      status: "failure",
+      message: "Something went wrong, try again",
+    });
+  }
+});
+router.put("/changeCourseImage", upload.single("file"), async (req, res) => {
+  try {
+    const {
+      file,
+      body: { courseId, courseName },
+    } = req;
+
+    const PictireRemove = await picturesS3.Remove(
+      "Courses Images/" + courseName
+    );
+    if (!PictireRemove) {
+      return res.status(500).json({
+        status: "failure",
+        message:
+          "Предыдущая картинка курса не удалена из базы данных, попробуйте снова",
+      });
+    }
+
+    const upload = await picturesS3.Upload(
+      {
+        buffer: file.buffer,
+        name: courseName,
+      },
+      "/Courses Images/"
+    );
+
+    if (!upload) {
+      res.status(500).json({
+        status: "failure",
+        message: "Файл не загружен в базу данных, попробуйте снова",
+      });
+    }
+
+    const courseRef = db.collection("courses").doc(courseId);
+    await courseRef.update({ pictureUrl: upload.Location });
+    return res.json({ status: "success", message: "Изображение изменено" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      status: "failure",
+      message: "Something went wrong, try again",
+    });
+  }
+});
+
+router.put("/changeCoursePrice", async (req, res) => {
+  try {
+    const { price, courseId } = req.body;
+    const courseRef = db.collection("courses").doc(courseId);
+    await courseRef.update({ price: price });
+    return res.json({ status: "success", message: "Цена изменена" });
   } catch (error) {
     console.log(error);
     res.status(500).json({

@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import AddVideo from "../components/admin/AddVideo";
 import Courses from "../components/admin/Courses";
 import DeleteVideo from "../components/admin/DeleteVideo";
-import Description from "../components/admin/Description";
+import EditCourse from "../components/admin/EditCourse";
 import NewCourse from "../components/admin/NewCourse";
 import useVideos, { Course, Video } from "../hooks/useVideos";
 
@@ -14,15 +14,11 @@ const AdminPage: React.FC = () => {
   const [courseName, setCourseName] = useState<string>("");
   const [videos, setVideos] = useState<Video[]>([]);
   const [isNewCourse, setIsNewCourse] = useState<boolean>(false);
-  const [shortDescription, setShortDescription] = useState<string>("");
-  const [fullDescription, setFullDescription] = useState<string>("");
-  const [descriptionDefaultValue, setDescriptionDefaultValue] = useState<{
-    shortDesc: string;
-    fulltDesc: string;
-  }>({
-    shortDesc: "",
-    fulltDesc: "",
-  });
+  const [courseInfo, setCourseInfo] = useState<Course | null>(null);
+
+  const onEditCourse = (course: Course | null) => {
+    setCourseInfo(course);
+  };
 
   const fetchVideos = useCallback(
     async (name: string) => {
@@ -49,20 +45,6 @@ const AdminPage: React.FC = () => {
     fetchCourses(true);
   }, [fetchCourses]);
 
-  useEffect(() => {
-    if (courseName) {
-      const courseIndex = courses.findIndex((el) => el.name === courseName);
-      const shortDescription = courses[courseIndex].shortDescription || "";
-      const fullDescription = courses[courseIndex].fullDescription || "";
-      setShortDescription(shortDescription);
-      setFullDescription(fullDescription);
-      setDescriptionDefaultValue({
-        shortDesc: shortDescription,
-        fulltDesc: fullDescription,
-      });
-    }
-  }, [courseName, courses]);
-
   return (
     <Container sx={{ mt: "20px", mb: "20px" }}>
       <h1
@@ -82,11 +64,14 @@ const AdminPage: React.FC = () => {
           setIsNewCourse={setIsNewCourse}
           fetchVideos={fetchVideos}
           isCoursesLoading={isCoursesLoading}
+          onEditCourse={onEditCourse}
           // fetchCourses={fetchCourses}
         />
         <div style={{ width: "100%" }}>
           {isNewCourse || !courses.length ? (
             <NewCourse fetchCourses={fetchCourses} />
+          ) : courseInfo ? (
+            <EditCourse courseInfo={courseInfo} />
           ) : (
             <>
               <AddVideo courseName={courseName} fetchVideos={fetchVideos} />
@@ -95,26 +80,6 @@ const AdminPage: React.FC = () => {
                 videos={videos}
                 isLoading={isVideosLoading || isCoursesLoading}
                 fetchVideos={fetchVideos}
-              />
-              <Description
-                description={shortDescription}
-                setDescription={setShortDescription}
-                defaultValue={descriptionDefaultValue.shortDesc}
-                courseID={
-                  courses[courses.findIndex((el) => el.name === courseName)].id
-                }
-                type={"shortDescription"}
-                title="Краткое описание"
-              />
-              <Description
-                description={fullDescription}
-                setDescription={setFullDescription}
-                defaultValue={descriptionDefaultValue.fulltDesc}
-                courseID={
-                  courses[courses.findIndex((el) => el.name === courseName)].id
-                }
-                type={"fullDescription"}
-                title="Полное описание"
               />
             </>
           )}

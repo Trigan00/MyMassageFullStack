@@ -17,21 +17,24 @@ const NewCourse: React.FC<NewCourseProps> = ({ fetchCourses }) => {
   const [coursePrice, setCoursePrice] = useState<string>("");
   const [shortDescription, setShortDescription] = useState<string>("");
   const [fullDescription, setFullDescription] = useState<string>("");
+  const [fileName, setFileName] = useState<string>("");
 
   const { createNewCourse, isLoading } = useAdmin();
 
-  const onSubmit = async (e: { preventDefault: () => void }) => {
+  const onSubmit = async (e: { target: any; preventDefault: () => void }) => {
     e.preventDefault();
+    const file = e.target[4].files[0];
     await createNewCourse(
       courseName,
       +coursePrice,
       shortDescription,
-      fullDescription
+      fullDescription,
+      file
     );
     fetchCourses(false);
   };
   return (
-    <>
+    <form encType="multipart/form-data" onSubmit={onSubmit}>
       <Paper elevation={3} style={{ padding: "15px" }}>
         <DialogTitle
           style={{
@@ -42,34 +45,63 @@ const NewCourse: React.FC<NewCourseProps> = ({ fetchCourses }) => {
         >
           Новый курс
         </DialogTitle>
-        <form encType="multipart/form-data">
-          <FormGroup>
-            <TextField
-              id="name"
-              label="название курса"
-              variant="outlined"
-              type="text"
-              size="small"
-              margin="normal"
-              value={courseName}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setCourseName(e.target.value)
-              }
-            />
-            <TextField
-              id="price"
-              label="цена"
-              variant="outlined"
-              type="number"
-              size="small"
-              margin="normal"
-              value={coursePrice}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setCoursePrice(e.target.value)
-              }
-            />
-          </FormGroup>
-        </form>
+        <FormGroup>
+          <TextField
+            id="name"
+            label="название курса"
+            variant="outlined"
+            type="text"
+            size="small"
+            margin="normal"
+            value={courseName}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setCourseName(e.target.value)
+            }
+          />
+          <TextField
+            id="price"
+            label="цена"
+            variant="outlined"
+            type="number"
+            size="small"
+            margin="normal"
+            value={coursePrice}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setCoursePrice(e.target.value)
+            }
+          />
+        </FormGroup>
+        <label
+          htmlFor="upload-file"
+          className="FlexAlignCentr"
+          style={{
+            marginTop: "10px",
+
+            justifyContent: "space-between",
+          }}
+        >
+          <input
+            id="upload-file"
+            type="file"
+            accept="image/png, image/jpeg"
+            style={{ display: "none" }}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setFileName(e.target.value)
+            }
+          />
+          <span style={{ color: "#7f8486", fontSize: "0.9em" }}>
+            {fileName ? fileName : "Файл не выбран"}
+          </span>
+
+          <Button
+            size="small"
+            component="span"
+            variant="contained"
+            style={{ marginRight: "10px" }}
+          >
+            Добавить изображение
+          </Button>
+        </label>
       </Paper>
       <Paper elevation={3} sx={{ mt: "20px", p: "15px" }}>
         <DialogTitle
@@ -99,7 +131,8 @@ const NewCourse: React.FC<NewCourseProps> = ({ fetchCourses }) => {
       {!isLoading ? (
         <Button
           variant="contained"
-          onClick={onSubmit}
+          type="submit"
+          // onClick={onSubmit}
           style={{ width: "100%", marginTop: "10px" }}
         >
           Создать
@@ -109,7 +142,7 @@ const NewCourse: React.FC<NewCourseProps> = ({ fetchCourses }) => {
           <Loader />
         </div>
       )}
-    </>
+    </form>
   );
 };
 

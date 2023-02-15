@@ -3,7 +3,7 @@ import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import AdminPage from "./pages/AdminPage";
-import AllCoursesPage from "./pages/AllCoursesPage";
+// import AllCoursesPage from "./pages/AllCoursesPage";
 import { consts } from "./utils/routsConsts";
 import LessonPage from "./pages/LessonPage";
 import CoursePage from "./pages/CoursePage";
@@ -34,10 +34,10 @@ export const publicRoutes = [
     path: consts.REGISTRATION_ROUTE,
     Component: RegisterPage,
   },
-  {
-    path: consts.ALLCOURSES_ROUTE,
-    Component: AllCoursesPage,
-  },
+  // {
+  //   path: consts.ALLCOURSES_ROUTE,
+  //   Component: AllCoursesPage,
+  // },
   {
     path: consts.MYCOURSES_ROUTE,
     Component: MyCoursesPage,
@@ -50,12 +50,12 @@ export const publicRoutes = [
     path: consts.ALLCOURSES_ROUTE + "/:name",
     Component: CoursePage,
   },
+  // {
+  //   path: consts.LESSON_ROUTE + "/:id",
+  //   Component: LessonPage,
+  // },
   {
-    path: consts.LESSON_ROUTE + "/:id",
-    Component: LessonPage,
-  },
-  {
-    path: consts.MYCOURSES_ROUTE + "/:courseName" + "/:id",
+    path: consts.MYCOURSES_ROUTE + "/:courseName/:id",
     Component: LessonPage,
   },
 ];

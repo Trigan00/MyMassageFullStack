@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import useAdmin from "../../hooks/useAdmin";
 import { Course } from "../../hooks/useVideos";
 import Loader from "../../UI/Loader";
-import MyModal from "../../UI/MyModal";
+import DeleteModal from "../../UI/DeleteModal";
 
 interface CoursesProps {
   courseName: string;
@@ -13,6 +13,7 @@ interface CoursesProps {
   setIsNewCourse: React.Dispatch<React.SetStateAction<boolean>>;
   fetchVideos: (name: string) => Promise<void>;
   isCoursesLoading: boolean;
+  onEditCourse: (course: Course | null) => void;
   // fetchCourses: (isFirstLoad: boolean) => Promise<void>;
 }
 
@@ -23,6 +24,7 @@ const Courses: React.FC<CoursesProps> = ({
   setIsNewCourse,
   fetchVideos,
   isCoursesLoading,
+  onEditCourse,
   // fetchCourses,
 }) => {
   const { deleteCourse, isLoading } = useAdmin();
@@ -41,9 +43,9 @@ const Courses: React.FC<CoursesProps> = ({
     <Paper elevation={3} className="AdminCourses">
       <h3 style={{ textAlign: "center" }}>Курсы</h3>
       {!isCoursesLoading || !isLoading ? (
-        coursesArr.map(({ name, id }) => (
+        coursesArr.map((course) => (
           <div
-            key={id}
+            key={course.id}
             style={{
               display: "flex",
               justifyContent: "space-between",
@@ -54,33 +56,55 @@ const Courses: React.FC<CoursesProps> = ({
               style={{
                 padding: "5px",
                 cursor: "pointer",
-                color: name === courseName ? "blue" : "black",
+                color: course.name === courseName ? "blue" : "black",
                 marginBottom: "10px",
                 width: "100%",
               }}
               onClick={() => {
-                setCourseName(name);
+                setCourseName(course.name);
                 setIsNewCourse(false);
-                fetchVideos(name);
+                fetchVideos(course.name);
+                onEditCourse(null);
               }}
             >
-              {name}
+              {course.name}
             </Card>
-            <Icon
-              style={{ marginTop: "5px", color: "#757575", cursor: "pointer" }}
-              onClick={() =>
-                setModalInfo({
-                  isModalOpen: true,
-                  modalName: name,
-                  deleteIsActive: false,
-                  data: {
-                    name: name,
-                  },
-                })
-              }
+            <div
+              style={{
+                display: "flex",
+                marginTop: "5px",
+                color: "#757575",
+              }}
             >
-              delete
-            </Icon>
+              <Icon
+                style={{
+                  cursor: "pointer",
+                }}
+                onClick={() => {
+                  setCourseName(course.name);
+                  onEditCourse(course);
+                }}
+              >
+                edit
+              </Icon>
+              <Icon
+                style={{
+                  cursor: "pointer",
+                }}
+                onClick={() =>
+                  setModalInfo({
+                    isModalOpen: true,
+                    modalName: course.name,
+                    deleteIsActive: false,
+                    data: {
+                      name: course.name,
+                    },
+                  })
+                }
+              >
+                delete
+              </Icon>
+            </div>
           </div>
         ))
       ) : (
@@ -97,7 +121,7 @@ const Courses: React.FC<CoursesProps> = ({
         Создать курс
       </Button>
 
-      <MyModal
+      <DeleteModal
         type="Курс"
         modalInfo={modalInfo}
         setModalInfo={setModalInfo}

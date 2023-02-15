@@ -1,6 +1,7 @@
 import Container from "@mui/material/Container/Container";
 import React, { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import Sanitize from "../helpers/Sanitize";
 import { useAuth } from "../hooks/useAuth";
 import { useAuthState } from "../hooks/useAuthState";
 import { useHttp } from "../hooks/useHttp";
@@ -56,12 +57,7 @@ const LessonPage: React.FC = () => {
   return (
     <Container style={{ marginTop: "40px" }}>
       <span>Video Name: {data.name}</span>
-      <p>
-        Video Description: Lorem ipsum dolor sit amet consectetur adipisicing
-        elit. Enim, iure quod dolores repudiandae aliquam obcaecati ratione ea,
-        deserunt voluptates nesciunt sit? Eos ducimus asperiores voluptates
-        atque inventore ipsum esse nisi.
-      </p>
+      <Sanitize html={data.description} />
       <div className="FlexJustifyCentr">
         <video
           id="videoPlayer"

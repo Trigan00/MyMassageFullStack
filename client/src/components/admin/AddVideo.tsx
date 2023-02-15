@@ -10,6 +10,7 @@ import useAdmin from "../../hooks/useAdmin";
 import { useTypedDispatch } from "../../store/hooks/useTypedDispatch";
 import { setAlert } from "../../store/slices/alertSlice";
 import Loader from "../../UI/Loader";
+import TextEditor from "./TextEditor";
 
 interface AddVideoProps {
   courseName: string;
@@ -21,10 +22,12 @@ const AddVideo: React.FC<AddVideoProps> = ({ courseName, fetchVideos }) => {
   const [name, setName] = useState<string>("");
   const [fileName, setFileName] = useState<string>("");
   const dispatch = useTypedDispatch();
+  const [description, setDescription] = useState<string>("");
 
   const onDeleteHandler = () => {
     const input = document.getElementById("upload-file") as HTMLInputElement;
     setName("");
+    setDescription("");
     if (input.value) {
       input.value = "";
       setFileName("Файл не выбран");
@@ -43,7 +46,7 @@ const AddVideo: React.FC<AddVideoProps> = ({ courseName, fetchVideos }) => {
       );
       return;
     }
-    await uploadFiles(file, name, courseName);
+    await uploadFiles(file, name, courseName, description);
     fetchVideos(courseName);
   };
 
@@ -75,7 +78,7 @@ const AddVideo: React.FC<AddVideoProps> = ({ courseName, fetchVideos }) => {
             <input
               id="upload-file"
               type="file"
-              accept=".mp4"
+              accept="video/*"
               style={{ display: "none" }}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 setFileName(e.target.value)
@@ -103,6 +106,20 @@ const AddVideo: React.FC<AddVideoProps> = ({ courseName, fetchVideos }) => {
               </Button>
             </div>
           </label>
+
+          <div>
+            <DialogTitle
+              style={{
+                // textAlign: "center",
+                fontWeight: "normal",
+                fontSize: "1rem",
+                color: "#7f8486",
+              }}
+            >
+              Описание
+            </DialogTitle>
+            <TextEditor text={description} setText={setDescription} />
+          </div>
 
           <div style={{ marginTop: "10px" }}>
             {!isLoading ? (

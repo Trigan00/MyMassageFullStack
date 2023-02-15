@@ -1,0 +1,43 @@
+.Logo {
+  font-size: 18px;
+}
+
+.Email {
+  position: relative;
+  display: flex;
+  align-items: center;
+  border-radius: 7px;
+  margin-left: 10px;
+  padding: 4px 10px 4px 35px;
+  color: #fff;
+  font-weight: 100;
+  font-size: 1rem;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset,
+    rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;
+}
+
+@media screen and (max-width: 720px) {
+  .Logo {
+    font-size: 16px;
+  }
+
+  .NavbarText {
+    font-size: 12px;
+  }
+  .Email {
+    font-size: 14px;
+    margin-left: 5px;
+  }
+}
+@media screen and (max-width: 450px) {
+  .Logo {
+    font-size: 15px;
+  }
+  .NavbarText {
+    font-size: 11px;
+  }
+  .Email {
+    font-size: 12px;
+    margin-left: 2px;
+  }
+}

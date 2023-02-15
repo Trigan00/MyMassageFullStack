@@ -9,26 +9,44 @@ const useAdmin = () => {
   const dispatch = useTypedDispatch();
   const [isLoading, setIsLoading] = useState(false);
 
+  const CatchFunction = (error: any) => {
+    setIsLoading(false);
+    console.log(error);
+    dispatch(
+      setAlert({
+        severity: "error",
+        message: error.response.data.message,
+      })
+    );
+  };
+
   const createNewCourse = async (
     name: string,
     price: number,
     shortDescription: string,
-    fullDescription: string
+    fullDescription: string,
+    file: File
   ) => {
     try {
-      if (!name.trim()) {
+      if (!name.trim() || !price || !file) {
         return dispatch(
           setAlert({
             severity: "error",
-            message: "Название курса не указано",
+            message: "Введены не все данные",
           })
         );
       }
       setIsLoading(true);
+      const data = new FormData();
+      data.append("name", name);
+      data.append("price", price.toString());
+      data.append("shortDescription", shortDescription);
+      data.append("fullDescription", fullDescription);
+      data.append("file", file);
 
       const res = await axios.post(
         `${process.env.REACT_APP_SERVERURL}/api/admin/newCourse`,
-        { name, price, shortDescription, fullDescription },
+        data,
         {
           headers: {
             authorization: "Bearer " + token,
@@ -44,14 +62,7 @@ const useAdmin = () => {
       );
       setIsLoading(false);
     } catch (error: any) {
-      setIsLoading(false);
-      console.log(error);
-      dispatch(
-        setAlert({
-          severity: "error",
-          message: error.response.data.message,
-        })
-      );
+      CatchFunction(error);
     }
   };
 
@@ -76,20 +87,14 @@ const useAdmin = () => {
         })
       );
     } catch (error: any) {
-      setIsLoading(false);
-      console.log(error);
-      dispatch(
-        setAlert({
-          severity: "error",
-          message: error.response.data.message,
-        })
-      );
+      CatchFunction(error);
     }
   };
   const uploadFiles = async (
-    file: any,
+    file: File,
     inputName: string,
-    collectionName: string
+    collectionName: string,
+    description: string
   ) => {
     try {
       if (!inputName.trim()) {
@@ -106,6 +111,7 @@ const useAdmin = () => {
       data.append("file", file);
       data.append("inputName", inputName);
       data.append("collectionName", collectionName);
+      data.append("description", description);
 
       const res = await axios.post(
         `${process.env.REACT_APP_SERVERURL}/api/admin/uploadFile`,
@@ -125,14 +131,7 @@ const useAdmin = () => {
       );
       setIsLoading(false);
     } catch (error: any) {
-      setIsLoading(false);
-      console.log(error);
-      dispatch(
-        setAlert({
-          severity: "error",
-          message: error.response.data.message,
-        })
-      );
+      CatchFunction(error);
     }
   };
 
@@ -156,14 +155,35 @@ const useAdmin = () => {
       );
       setIsLoading(false);
     } catch (error: any) {
-      setIsLoading(false);
-      console.log(error);
+      CatchFunction(error);
+    }
+  };
+  const changeVideoDescription = async (
+    id: string,
+    courseName: string,
+    name: string,
+    description: string
+  ) => {
+    try {
+      setIsLoading(true);
+      const res = await axios.put(
+        `${process.env.REACT_APP_SERVERURL}/api/admin/changeVideoDescription`,
+        { id, courseName, name, description },
+        {
+          headers: {
+            authorization: "Bearer " + token,
+          },
+        }
+      );
       dispatch(
         setAlert({
-          severity: "error",
-          message: error.response.data.message,
+          severity: "success",
+          message: res.data.message,
         })
       );
+      setIsLoading(false);
+    } catch (error: any) {
+      CatchFunction(error);
     }
   };
   const changeDescription = async (
@@ -190,15 +210,67 @@ const useAdmin = () => {
       );
       setIsLoading(false);
     } catch (error: any) {
-      setIsLoading(false);
-      console.log(error);
+      CatchFunction(error);
+    }
+  };
+  const changeCourseImage = async (
+    file: File,
+    courseId: string,
+    courseName: string
+  ) => {
+    try {
+      setIsLoading(true);
+
+      const data = new FormData();
+      data.append("file", file);
+      data.append("courseId", courseId);
+      data.append("courseName", courseName);
+
+      // console.log({ ...data });
+      const res = await axios.put(
+        `${process.env.REACT_APP_SERVERURL}/api/admin/changeCourseImage`,
+        data,
+        {
+          headers: {
+            authorization: "Bearer " + token,
+          },
+        }
+      );
       dispatch(
         setAlert({
-          severity: "error",
-          message: error.response.data.message,
+          severity: "success",
+          message: res.data.message,
         })
       );
-      return;
+
+      setIsLoading(false);
+    } catch (error: any) {
+      CatchFunction(error);
+    }
+  };
+  const changeCoursePrice = async (price: number, courseId: string) => {
+    try {
+      setIsLoading(true);
+
+      const res = await axios.put(
+        `${process.env.REACT_APP_SERVERURL}/api/admin/changeCoursePrice`,
+        { price, courseId },
+        {
+          headers: {
+            authorization: "Bearer " + token,
+          },
+        }
+      );
+      dispatch(
+        setAlert({
+          severity: "success",
+          message: res.data.message,
+        })
+      );
+
+      setIsLoading(false);
+    } catch (error: any) {
+      CatchFunction(error);
     }
   };
 
@@ -208,6 +280,9 @@ const useAdmin = () => {
     createNewCourse,
     deleteCourse,
     changeDescription,
+    changeVideoDescription,
+    changeCourseImage,
+    changeCoursePrice,
     isLoading,
   };
 };

@@ -6,7 +6,7 @@ import useVideos, { Course } from "../hooks/useVideos";
 import Loader from "../UI/Loader";
 import { consts } from "../utils/routsConsts";
 
-const AllCoursesPage: React.FC = () => {
+const AllCourses: React.FC = () => {
   const { getCourses, isCoursesLoading } = useVideos();
   const [courses, setCourses] = useState<Course[]>([]);
   const navigate = useNavigate();
@@ -33,7 +33,7 @@ const AllCoursesPage: React.FC = () => {
         }}
       >
         {!isCoursesLoading ? (
-          courses.map(({ name, id, price, shortDescription }) => (
+          courses.map(({ name, id, price, shortDescription, pictureUrl }) => (
             <Card
               variant="outlined"
               key={id}
@@ -48,11 +48,14 @@ const AllCoursesPage: React.FC = () => {
             >
               {name}
               <img
-                src={"https://media.tenor.com/lVhFnY9tc94AAAAC/anime-dance.gif"}
+                src={
+                  pictureUrl ||
+                  "https://media.tenor.com/lVhFnY9tc94AAAAC/anime-dance.gif"
+                }
                 width="200px"
                 height="200px"
                 style={{ display: "block" }}
-                alt="Chika danse"
+                alt="CoursePicture"
               />
               <div>
                 <Sanitize html={shortDescription} />
@@ -75,4 +78,4 @@ const AllCoursesPage: React.FC = () => {
   );
 };
 
-export default AllCoursesPage;
+export default AllCourses;
