@@ -3,11 +3,12 @@ const Router = require("express");
 const router = new Router();
 router.post("/addUser", async (req, res) => {
   try {
-    const { id, email } = req.body;
+    const { id, email, username } = req.body;
 
     const docRef = db.collection("users").doc(id);
 
     await docRef.set({
+      username,
       email,
       courses: [],
       role: "user",

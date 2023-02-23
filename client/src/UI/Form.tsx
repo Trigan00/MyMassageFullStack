@@ -1,28 +1,51 @@
 import { Button, TextField } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { errorsTypes, firebaseErrors } from "../utils/firebaseErrors";
 import Loader from "./Loader";
 
 interface FormProps {
   isSignUp: boolean;
   title: string;
   isLoading: boolean;
-  errorMsg: { email: string; password: string };
-  onSubmit: (email: string, password: string) => void;
+  error: string;
+  onSubmit: (email: string, password: string, username?: string) => void;
 }
 
 const Form: React.FC<FormProps> = ({
   isSignUp,
   title,
   isLoading,
-  errorMsg,
+  error,
   onSubmit,
 }) => {
   const [form, setForm] = useState<{ email: string; password: string }>({
     email: "",
     password: "",
   });
+  const [username, setUsername] = useState<string>("");
   const [confirmPassword, setCofirmPassword] = useState<string>("");
   const [confirmPasswordError, setConfirmPasswordError] = useState<string>("");
+  const [errorMsg, setErrorMsg] = useState({
+    email: "",
+    password: "",
+  });
+  const [usernameErorr, setUsernameErorr] = useState("");
+
+  useEffect(() => {
+    //Доработать, показывать общую ошибку (просто e)
+    if (error) {
+      if (error.indexOf("password") > 0)
+        setErrorMsg({
+          email: "",
+          password: firebaseErrors[error as keyof errorsTypes],
+        });
+      else
+        setErrorMsg({
+          email: firebaseErrors[error as keyof errorsTypes],
+          password: "",
+        });
+    }
+  }, [error]);
 
   const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -30,8 +53,25 @@ const Form: React.FC<FormProps> = ({
 
   const submitHandler = (e: React.MouseEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (isSignUp && form.password !== confirmPassword) {
-      return setConfirmPasswordError("Пароли не совпадают");
+    setErrorMsg({ email: "", password: "" });
+    setUsernameErorr("");
+    setConfirmPasswordError("");
+    if (!form.email.trim().length || !form.password.trim().length) {
+      if (!username.trim().length) {
+        setUsernameErorr("Поле не должно быть пустым");
+      }
+      setErrorMsg({
+        email: form.email.trim() ? "" : "Поле не должно быть пустым",
+        password: form.password.trim() ? "" : "Поле не должно быть пустым",
+      });
+      return;
+    }
+    if (isSignUp) {
+      if (form.password !== confirmPassword) {
+        return setConfirmPasswordError("Пароли не совпадают");
+      }
+
+      return onSubmit(form.email, form.password, username);
     }
 
     onSubmit(form.email, form.password);
@@ -46,8 +86,23 @@ const Form: React.FC<FormProps> = ({
         flexDirection: "column",
       }}
     >
+      {isSignUp && (
+        <>
+          <TextField
+            label="Имя пользователя"
+            variant="filled"
+            margin="normal"
+            error={!!usernameErorr}
+            helperText={usernameErorr}
+            name="username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            type="text"
+          />
+        </>
+      )}
+
       <TextField
-        id="filled-basic"
         label="Email"
         variant="filled"
         margin="normal"
@@ -59,7 +114,6 @@ const Form: React.FC<FormProps> = ({
         type="email"
       />
       <TextField
-        id="filled-basic_2"
         label="Пароль"
         variant="filled"
         margin="normal"
@@ -74,7 +128,6 @@ const Form: React.FC<FormProps> = ({
       {isSignUp && (
         <>
           <TextField
-            id="filled-basic_3"
             label="Подтвердите пароль"
             variant="filled"
             margin="normal"

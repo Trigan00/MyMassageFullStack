@@ -28,7 +28,7 @@ const useAdmin = () => {
     file: File
   ) => {
     try {
-      if (!name.trim() || !price || !file) {
+      if (!name.trim() || !file) {
         return dispatch(
           setAlert({
             severity: "error",

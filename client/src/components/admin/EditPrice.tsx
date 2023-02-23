@@ -42,6 +42,19 @@ const EditPrice: React.FC<EditPriceProps> = ({ courseInfo }) => {
       </DialogTitle>
       {!isLoading ? (
         <div>
+          <TextField
+            id="price"
+            variant="outlined"
+            type="number"
+            size="small"
+            margin="normal"
+            sx={{ width: "100%" }}
+            value={coursePrice}
+            disabled={!isEdit}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setCoursePrice(e.target.value)
+            }
+          />
           {!isEdit ? (
             <Button
               variant="contained"
@@ -70,19 +83,6 @@ const EditPrice: React.FC<EditPriceProps> = ({ courseInfo }) => {
               </Button>
             </div>
           )}
-          <TextField
-            id="price"
-            variant="outlined"
-            type="number"
-            size="small"
-            margin="normal"
-            sx={{ width: "100%" }}
-            value={coursePrice}
-            disabled={!isEdit}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setCoursePrice(e.target.value)
-            }
-          />
         </div>
       ) : (
         <div className="FlexJustifyCentr">

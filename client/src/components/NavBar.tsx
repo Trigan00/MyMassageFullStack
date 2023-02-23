@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import { getAuth, signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import Sanitize from "../helpers/Sanitize";
 import shortenText from "../helpers/shortenText";
 import { useAuth } from "../hooks/useAuth";
 import { useTypedDispatch } from "../store/hooks/useTypedDispatch";
@@ -20,7 +21,7 @@ import styles from "./styles/NavBar.module.scss";
 
 const NavBar: React.FC = () => {
   const dispatch = useTypedDispatch();
-  const { email, isAuth, role, isVerified } = useAuth();
+  const { username, email, isAuth, role, isVerified } = useAuth();
   const navigate = useNavigate();
 
   const signOutHandler = (): void => {
@@ -39,7 +40,7 @@ const NavBar: React.FC = () => {
     <Box>
       <AppBar position="static">
         <Container>
-          <Toolbar sx={{ padding: 0 }}>
+          <Toolbar style={{ padding: 0 }}>
             <Box
               className={styles.Logo}
               component="div"
@@ -101,8 +102,14 @@ const NavBar: React.FC = () => {
                       </Icon>
                     </IconButton>
                   )}
-                  <Tooltip title={email}>
-                    <span>{shortenText(email || "", 10)}</span>
+                  <Tooltip
+                    title={
+                      <Sanitize
+                        html={`<div>${username}</div><div>${email}</div>`}
+                      />
+                    }
+                  >
+                    <span>{shortenText(username || "", 10)}</span>
                   </Tooltip>
                 </div>
                 <IconButton

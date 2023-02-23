@@ -1,13 +1,15 @@
 import { getAuth } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, DocumentData, getDoc } from "firebase/firestore";
 import { useState, useEffect } from "react";
 import { db } from "../firebase";
 import { useTypedDispatch } from "../store/hooks/useTypedDispatch";
+import { useTypedSelector } from "../store/hooks/useTypedSelector";
 import { setUser } from "../store/slices/userSlice";
 
 export const useAuthState = () => {
   const dispatch = useTypedDispatch();
   const [isPending, setPending] = useState<boolean>(true);
+  const selector = useTypedSelector((state) => state.user);
 
   useEffect(() => {
     const auth = getAuth();
@@ -15,16 +17,17 @@ export const useAuthState = () => {
     const unsubscribe = auth.onAuthStateChanged(async (user: any) => {
       if (user) {
         const docSnap = await getDoc(doc(db, "users", user.uid));
-        const role: string | null = docSnap.exists()
-          ? docSnap.data().role
+        const userData: DocumentData | null = docSnap.exists()
+          ? docSnap.data()
           : null;
 
         const token = await user.getIdToken();
         dispatch(
           setUser({
+            username: userData && userData.username,
             email: user.email,
             id: user.uid,
-            role: role,
+            role: userData && userData.role,
             isVerified: user.emailVerified,
             token: token,
           })
@@ -35,7 +38,7 @@ export const useAuthState = () => {
       }
     });
     return unsubscribe;
-  }, [dispatch]);
+  }, [dispatch, selector]);
 
   return { isPending };
 };
