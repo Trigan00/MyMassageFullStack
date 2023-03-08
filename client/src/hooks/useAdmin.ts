@@ -273,6 +273,29 @@ const useAdmin = () => {
       CatchFunction(error);
     }
   };
+  const getComments = async (videoName: string, courseName: string) => {
+    try {
+      setIsLoading(true);
+
+      const res = await axios.get(
+        `${process.env.REACT_APP_SERVERURL}/api/admin/comments`,
+        {
+          params: {
+            videoName,
+            courseName,
+          },
+          headers: {
+            authorization: "Bearer " + token,
+          },
+        }
+      );
+
+      setIsLoading(false);
+      return res.data;
+    } catch (error: any) {
+      CatchFunction(error);
+    }
+  };
 
   return {
     uploadFiles,
@@ -283,6 +306,7 @@ const useAdmin = () => {
     changeVideoDescription,
     changeCourseImage,
     changeCoursePrice,
+    getComments,
     isLoading,
   };
 };

@@ -1,10 +1,7 @@
 import { Container } from "@mui/system";
 import { useCallback, useEffect, useState } from "react";
-import AddVideo from "../components/admin/AddVideo";
+import AdminComponents from "../components/admin/AdminComponents";
 import Courses from "../components/admin/Courses";
-import DeleteVideo from "../components/admin/DeleteVideo";
-import EditCourse from "../components/admin/EditCourse";
-import NewCourse from "../components/admin/NewCourse";
 import useVideos, { Course, Video } from "../hooks/useVideos";
 
 const AdminPage: React.FC = () => {
@@ -15,6 +12,7 @@ const AdminPage: React.FC = () => {
   const [videos, setVideos] = useState<Video[]>([]);
   const [isNewCourse, setIsNewCourse] = useState<boolean>(false);
   const [courseInfo, setCourseInfo] = useState<Course | null>(null);
+  const [commentsVideo, setCommentsVideo] = useState<string>("");
 
   const onEditCourse = (course: Course | null) => {
     setCourseInfo(course);
@@ -55,6 +53,7 @@ const AdminPage: React.FC = () => {
         }}
       >
         {courseName}
+        {commentsVideo && <span> / {commentsVideo}</span>}
       </h1>
       <div className="AdminPageWrapper">
         <Courses
@@ -65,24 +64,22 @@ const AdminPage: React.FC = () => {
           fetchVideos={fetchVideos}
           isCoursesLoading={isCoursesLoading}
           onEditCourse={onEditCourse}
-          // fetchCourses={fetchCourses}
+          setCommentsVideo={setCommentsVideo}
         />
         <div style={{ width: "100%" }}>
-          {isNewCourse || !courses.length ? (
-            <NewCourse fetchCourses={fetchCourses} />
-          ) : courseInfo ? (
-            <EditCourse courseInfo={courseInfo} />
-          ) : (
-            <>
-              <AddVideo courseName={courseName} fetchVideos={fetchVideos} />
-              <DeleteVideo
-                courseName={courseName}
-                videos={videos}
-                isLoading={isVideosLoading || isCoursesLoading}
-                fetchVideos={fetchVideos}
-              />
-            </>
-          )}
+          <AdminComponents
+            isNewCourse={isNewCourse}
+            courses={courses}
+            fetchCourses={fetchCourses}
+            courseInfo={courseInfo}
+            fetchVideos={fetchVideos}
+            courseName={courseName}
+            videos={videos}
+            isVideosLoading={isVideosLoading}
+            isCoursesLoading={isCoursesLoading}
+            commentsVideo={commentsVideo}
+            setCommentsVideo={setCommentsVideo}
+          />
         </div>
       </div>
     </Container>

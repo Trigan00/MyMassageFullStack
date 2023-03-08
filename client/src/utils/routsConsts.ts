@@ -6,6 +6,7 @@ interface constsTypes {
   ALLCOURSES_ROUTE: string;
   LESSON_ROUTE: string;
   MYCOURSES_ROUTE: string;
+  RESET_PASSWORD: string;
 }
 
 export const consts: constsTypes = {
@@ -16,4 +17,5 @@ export const consts: constsTypes = {
   ALLCOURSES_ROUTE: "/courses",
   LESSON_ROUTE: "/videos/lesson",
   MYCOURSES_ROUTE: "/my_courses",
+  RESET_PASSWORD: "/reset_password",
 };

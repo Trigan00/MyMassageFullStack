@@ -1,6 +1,7 @@
 import Container from "@mui/material/Container/Container";
 import React, { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import Feedback from "../components/Feedback";
 import Sanitize from "../helpers/Sanitize";
 import { useAuth } from "../hooks/useAuth";
 import { useAuthState } from "../hooks/useAuthState";
@@ -10,11 +11,11 @@ import { setAlert } from "../store/slices/alertSlice";
 import Loader from "../UI/Loader";
 
 const LessonPage: React.FC = () => {
+  const { request } = useHttp();
   const { id, courseName } = useParams();
   const dispatch = useTypedDispatch();
   const { token } = useAuth();
   const { isPending } = useAuthState();
-  const { request } = useHttp();
   const [data, setData] = useState<any>();
 
   const getVideoInfo = useCallback(async () => {
@@ -58,13 +59,23 @@ const LessonPage: React.FC = () => {
     <Container style={{ marginTop: "40px" }}>
       <span>Video Name: {data.name}</span>
       <Sanitize html={data.description} />
-      <div className="FlexJustifyCentr">
+      <div
+        className="FlexJustifyCentr"
+        style={{ position: "relative", paddingTop: "56.25%" }}
+      >
         <video
           id="videoPlayer"
           width="100%"
           controls
           autoPlay
           controlsList="nodownload"
+          style={{
+            position: "absolute",
+            left: "0",
+            top: "0",
+            width: "100%",
+            height: "auto",
+          }}
         >
           <source
             src={`${process.env.REACT_APP_SERVERURL}/api/courses/video/=${courseName}=${id}=${token}`}
@@ -72,6 +83,7 @@ const LessonPage: React.FC = () => {
           />
         </video>
       </div>
+      <Feedback videoName={data.name} courseName={courseName || ""} />
     </Container>
   );
 };

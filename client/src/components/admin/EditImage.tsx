@@ -18,7 +18,9 @@ const EditImage: React.FC<EditImageProps> = ({ courseInfo }) => {
 
   const ImgInputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFileName(e.target.value);
-    setImgFileURL(URL.createObjectURL(imgRef.current.files[0]));
+    if (imgRef.current.files[0])
+      setImgFileURL(URL.createObjectURL(imgRef.current.files[0]));
+    else setImgFileURL(courseInfo.pictureUrl);
   };
 
   const savePictureHandler = async () => {
@@ -36,7 +38,7 @@ const EditImage: React.FC<EditImageProps> = ({ courseInfo }) => {
         src={imgFileURL || courseInfo.pictureUrl}
         width="200px"
         height="200px"
-        style={{ display: "block" }}
+        style={{ display: "block", objectFit: "cover" }}
         alt="CoursePicture"
       />
       <label

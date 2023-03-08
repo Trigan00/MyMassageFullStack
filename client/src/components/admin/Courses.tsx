@@ -14,7 +14,7 @@ interface CoursesProps {
   fetchVideos: (name: string) => Promise<void>;
   isCoursesLoading: boolean;
   onEditCourse: (course: Course | null) => void;
-  // fetchCourses: (isFirstLoad: boolean) => Promise<void>;
+  setCommentsVideo: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const Courses: React.FC<CoursesProps> = ({
@@ -25,7 +25,7 @@ const Courses: React.FC<CoursesProps> = ({
   fetchVideos,
   isCoursesLoading,
   onEditCourse,
-  // fetchCourses,
+  setCommentsVideo,
 }) => {
   const { deleteCourse, isLoading } = useAdmin();
   const [modalInfo, setModalInfo] = useState<{
@@ -65,6 +65,7 @@ const Courses: React.FC<CoursesProps> = ({
                 setIsNewCourse(false);
                 fetchVideos(course.name);
                 onEditCourse(null);
+                setCommentsVideo("");
               }}
             >
               {course.name}

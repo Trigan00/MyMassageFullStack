@@ -44,7 +44,7 @@ class Middleware {
       }
 
       if (!token) {
-        return res.status(401).json({ message: "No authorization" });
+        return res.status(401).json({ message: "No authorization - a" });
       }
 
       const decoded = await auth.getAuth().verifyIdToken(token);
@@ -53,10 +53,12 @@ class Middleware {
         req.user = decoded;
         return next();
       }
-      return res.status(401).json({ message: "No authorization" });
+      return res.status(401).json({ message: "No authorization - b" });
     } catch (e) {
       console.log(e);
-      return res.status(401).json({ message: "No authorization" });
+      return res
+        .status(401)
+        .json({ message: "Необходима авторизации, обновите страницу" });
     }
   }
 }

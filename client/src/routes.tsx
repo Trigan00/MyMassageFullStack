@@ -9,6 +9,7 @@ import LessonPage from "./pages/LessonPage";
 import CoursePage from "./pages/CoursePage";
 import MyCoursesPage from "./pages/MyCoursesPage";
 import MyCourseInfoPage from "./pages/MyCourseInfoPage";
+import ResetPasswordPage from "./pages/ResetPasswordPage";
 
 // export const authRoutes = [
 //   //Можно добавить роут оплаты прайма
@@ -57,5 +58,9 @@ export const publicRoutes = [
   {
     path: consts.MYCOURSES_ROUTE + "/:courseName/:id",
     Component: LessonPage,
+  },
+  {
+    path: consts.RESET_PASSWORD,
+    Component: ResetPasswordPage,
   },
 ];

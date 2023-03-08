@@ -32,7 +32,6 @@ const Form: React.FC<FormProps> = ({
   const [usernameErorr, setUsernameErorr] = useState("");
 
   useEffect(() => {
-    //Доработать, показывать общую ошибку (просто e)
     if (error) {
       if (error.indexOf("password") > 0)
         setErrorMsg({

@@ -24,6 +24,12 @@ const LoginPage = () => {
       >
         Создать аккаунт
       </Link>
+      <Link
+        to={consts.RESET_PASSWORD}
+        style={{ color: "#1976d2", marginLeft: "10px", float: "right" }}
+      >
+        Забыли пароль ?
+      </Link>
     </Card>
   );
 };

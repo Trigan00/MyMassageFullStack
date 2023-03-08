@@ -54,7 +54,7 @@ const AllCourses: React.FC = () => {
                 }
                 width="200px"
                 height="200px"
-                style={{ display: "block" }}
+                style={{ display: "block", objectFit: "cover" }}
                 alt="CoursePicture"
               />
               <div>

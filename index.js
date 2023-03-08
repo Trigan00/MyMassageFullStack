@@ -16,10 +16,9 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(cors());
-// app.use(authMiddleware.decodeToken);
 
 app.use("/api/auth", authRouter);
-app.use("/api/buy", buyCourse);
+app.use("/api/buy", authMiddleware.decodeToken, buyCourse);
 app.use("/api/admin", authMiddleware.isAdmin, adminRouter);
 app.use("/api/courses", authMiddleware.decodeToken, lessonRouter);
 

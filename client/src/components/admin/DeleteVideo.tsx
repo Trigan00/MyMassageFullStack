@@ -23,6 +23,7 @@ interface DeleteVideoProps {
   courseName: string;
   isLoading: boolean;
   fetchVideos: (name: string) => Promise<void>;
+  setCommentsVideo: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const DeleteVideo: React.FC<DeleteVideoProps> = ({
@@ -30,6 +31,7 @@ const DeleteVideo: React.FC<DeleteVideoProps> = ({
   videos,
   isLoading,
   fetchVideos,
+  setCommentsVideo,
 }) => {
   const { deleteFiles } = useAdmin();
   const [modalInfo, setModalInfo] = useState<{
@@ -53,11 +55,20 @@ const DeleteVideo: React.FC<DeleteVideoProps> = ({
         <Demo>
           <List>
             {!isLoading ? (
-              videos.map((video: any) => (
+              videos.map((video: Video) => (
                 <ListItem
                   key={video.id}
                   secondaryAction={
                     <div>
+                      <IconButton
+                        sx={{ mr: "5px" }}
+                        aria-label="edit"
+                        onClick={() => {
+                          setCommentsVideo(video.name);
+                        }}
+                      >
+                        <Icon>comment</Icon>
+                      </IconButton>
                       <IconButton
                         sx={{ mr: "5px" }}
                         aria-label="edit"

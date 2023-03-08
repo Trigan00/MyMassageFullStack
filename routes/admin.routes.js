@@ -1,28 +1,11 @@
 const Router = require("express");
 const router = new Router();
-const EasyYandexS3 = require("easy-yandex-s3").default;
 const { db } = require("../firebase");
 const crypto = require("crypto");
 const multer = require("multer");
 const upload = multer();
-
-const s3 = new EasyYandexS3({
-  auth: {
-    accessKeyId: process.env.KEY_ID,
-    secretAccessKey: process.env.SECRET_KEY,
-  },
-  Bucket: process.env.BUCKET,
-  debug: true,
-});
-
-const picturesS3 = new EasyYandexS3({
-  auth: {
-    accessKeyId: process.env.KEY_ID,
-    secretAccessKey: process.env.SECRET_KEY,
-  },
-  Bucket: process.env.PICTURES_BUCKET,
-  debug: true,
-});
+const { s3, picturesS3 } = require("../s3Init");
+var url = require("url");
 
 router.post("/newCourse", upload.single("file"), async (req, res) => {
   try {
@@ -267,6 +250,31 @@ router.put("/changeCoursePrice", async (req, res) => {
     const courseRef = db.collection("courses").doc(courseId);
     await courseRef.update({ price: price });
     return res.json({ status: "success", message: "Цена изменена" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      status: "failure",
+      message: "Something went wrong, try again",
+    });
+  }
+});
+router.get("/comments", async (req, res) => {
+  try {
+    const url_parts = url.parse(req.url, true);
+    const { courseName, videoName } = url_parts.query;
+
+    const videoRef = db.collection("feedback").doc(courseName);
+
+    const doc = await videoRef.get();
+    if (!doc.exists) {
+      return res.status(200).json({ status: "success", data: [] });
+    }
+
+    if (!doc.data()[videoName])
+      return res.status(200).json({ status: "success", data: [] });
+
+    const commentsArr = Object.values(doc.data()[videoName]);
+    return res.status(200).json({ status: "success", data: commentsArr });
   } catch (error) {
     console.log(error);
     res.status(500).json({
