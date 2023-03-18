@@ -103,7 +103,7 @@ router.post("/uploadFile", upload.single("file"), async (req, res) => {
   try {
     const {
       file,
-      body: { name, inputName, collectionName, description },
+      body: { name, inputName, collectionName, description, timeStamp },
     } = req;
     let id = crypto.createHash("md5").update(name).digest("hex");
 
@@ -136,6 +136,7 @@ router.post("/uploadFile", upload.single("file"), async (req, res) => {
       name: inputName,
       fileName: name,
       description: description,
+      timeStamp: +timeStamp,
       // url: upload.Location,
     });
     return res

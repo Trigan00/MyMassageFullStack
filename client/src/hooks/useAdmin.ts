@@ -94,7 +94,8 @@ const useAdmin = () => {
     file: File,
     inputName: string,
     collectionName: string,
-    description: string
+    description: string,
+    timeStamp: number
   ) => {
     try {
       if (!inputName.trim()) {
@@ -112,6 +113,7 @@ const useAdmin = () => {
       data.append("inputName", inputName);
       data.append("collectionName", collectionName);
       data.append("description", description);
+      data.append("timeStamp", "" + timeStamp);
 
       const res = await axios.post(
         `${process.env.REACT_APP_SERVERURL}/api/admin/uploadFile`,

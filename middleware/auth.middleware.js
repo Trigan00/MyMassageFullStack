@@ -37,8 +37,9 @@ class Middleware {
 
       let token = "";
       if (url[1] === "video") {
-        const parsedUrl = url[2].split("="); //["", "course name", "id", "token" ]
-        token = parsedUrl[3];
+        // const parsedUrl = url[2].split("="); //["", "course name", "id", "token" ]
+        // token = parsedUrl[3];
+        return next();
       } else {
         token = req.headers.authorization.split(" ")[1];
       }
@@ -58,7 +59,7 @@ class Middleware {
       console.log(e);
       return res
         .status(401)
-        .json({ message: "Необходима авторизации, обновите страницу" });
+        .json({ message: "Необходима авторизации, обновите страницу!" });
     }
   }
 }

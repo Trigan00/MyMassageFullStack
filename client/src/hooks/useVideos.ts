@@ -7,6 +7,7 @@ export type Video = {
   name: string;
   fileName: string;
   description: string;
+  timeStamp: number;
 };
 export type Course = {
   id: string;
@@ -28,15 +29,17 @@ const useVideos = () => {
         const data = await getDocs(collection(db, category));
         const videos: Video[] = [];
         data.forEach((doc) => {
+          const videoData = doc.data();
           videos.push({
             id: doc.id,
-            name: doc.data().name,
-            fileName: doc.data().fileName,
-            description: doc.data().description,
+            name: videoData.name,
+            fileName: videoData.fileName,
+            description: videoData.description,
+            timeStamp: videoData.timeStamp,
           });
         });
         SetIsVideosLoading(false);
-        return videos;
+        return videos.sort((a, b) => b.timeStamp - a.timeStamp);
       } catch (error) {
         SetIsVideosLoading(false);
 
@@ -51,13 +54,14 @@ const useVideos = () => {
       const data = await getDocs(collection(db, "courses"));
       const courses: Course[] = [];
       data.forEach((doc) => {
+        const courseData = doc.data();
         courses.push({
           id: doc.id,
-          name: doc.data().name,
-          price: doc.data().price,
-          shortDescription: doc.data().shortDescription,
-          fullDescription: doc.data().fullDescription,
-          pictureUrl: doc.data().pictureUrl,
+          name: courseData.name,
+          price: courseData.price,
+          shortDescription: courseData.shortDescription,
+          fullDescription: courseData.fullDescription,
+          pictureUrl: courseData.pictureUrl,
         });
       });
       SetIsCoursesLoading(false);

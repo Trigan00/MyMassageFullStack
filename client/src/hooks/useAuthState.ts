@@ -1,35 +1,30 @@
-import { getAuth, getIdToken } from "firebase/auth";
+import { getAuth /* , getIdToken */ } from "firebase/auth";
 import { doc, DocumentData, getDoc } from "firebase/firestore";
 import { useState, useEffect } from "react";
 import { db } from "../firebase";
 import { useTypedDispatch } from "../store/hooks/useTypedDispatch";
-import { useTypedSelector } from "../store/hooks/useTypedSelector";
-import { setToken, setUser } from "../store/slices/userSlice";
+import { /* setToken,  */ setUser } from "../store/slices/userSlice";
 
 export const useAuthState = () => {
   const dispatch = useTypedDispatch();
   const [isPending, setPending] = useState<boolean>(true);
-  const selector = useTypedSelector((state) => state.user);
 
-  useEffect(() => {
-    const timer = setInterval(async () => {
-      console.log("Token Updated");
-      const auth: any = getAuth();
-      getIdToken(auth.currentUser)
-        .then((idToken) => {
-          dispatch(
-            setToken({
-              token: idToken,
-            })
-          );
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }, 1000 * 60 * 15);
+  // useEffect(() => {
+  //   const timer = setInterval(async () => {
+  //     const auth: any = getAuth();
+  //     getIdToken(auth.currentUser, true)
+  //       .then((idToken) => {
+  //         dispatch(setToken({ token: idToken }));
+  //         console.log(idToken);
+  //       })
+  //       .catch((error) => {
+  //         console.log(error);
+  //       });
+  //   }, 1000 * 60 * 15);
 
-    return () => clearInterval(timer);
-  });
+  //   return () => clearInterval(timer);
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
   useEffect(() => {
     const auth = getAuth();
@@ -58,7 +53,8 @@ export const useAuthState = () => {
       }
     });
     return unsubscribe;
-  }, [dispatch, selector]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return { isPending };
 };

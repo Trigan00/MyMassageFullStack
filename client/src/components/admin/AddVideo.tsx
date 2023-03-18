@@ -46,7 +46,7 @@ const AddVideo: React.FC<AddVideoProps> = ({ courseName, fetchVideos }) => {
       );
       return;
     }
-    await uploadFiles(file, name, courseName, description);
+    await uploadFiles(file, name, courseName, description, Date.now());
     fetchVideos(courseName);
   };
 

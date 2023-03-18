@@ -78,7 +78,7 @@ const LessonPage: React.FC = () => {
           }}
         >
           <source
-            src={`${process.env.REACT_APP_SERVERURL}/api/courses/video/=${courseName}=${id}=${token}`}
+            src={`${process.env.REACT_APP_SERVERURL}/api/courses/video/=${courseName}=${id}`}
             type="video/mp4"
           />
         </video>
