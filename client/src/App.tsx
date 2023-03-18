@@ -7,7 +7,7 @@ import MyAlert from "./UI/MyAlert";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./components/styles/style.css";
 import Footer from "./components/Footer";
-import { Container } from "react-bootstrap";
+// import { Container } from "react-bootstrap";
 
 function App() {
   useAuthState();
@@ -16,9 +16,9 @@ function App() {
   return (
     <BrowserRouter>
       <NavBar />
-      <Container>
-        <AppRouter />
-      </Container>
+      {/* <Container> */}
+      <AppRouter />
+      {/* </Container> */}
       <Footer />
       <MyAlert
         message={selector.message}
