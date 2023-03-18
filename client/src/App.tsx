@@ -4,6 +4,9 @@ import NavBar from "./components/NavBar";
 import { useAuthState } from "./hooks/useAuthState";
 import { useTypedSelector } from "./store/hooks/useTypedSelector";
 import MyAlert from "./UI/MyAlert";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./components/styles/style.css";
+import Footer from "./components/Footer";
 
 function App() {
   useAuthState();
@@ -13,6 +16,7 @@ function App() {
     <BrowserRouter>
       <NavBar />
       <AppRouter />
+      <Footer />
       <MyAlert
         message={selector.message}
         open={selector.isOpen}

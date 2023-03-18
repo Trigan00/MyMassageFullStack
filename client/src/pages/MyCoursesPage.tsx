@@ -8,7 +8,7 @@ import {
   ListItemText,
   Paper,
 } from "@mui/material";
-import Container from "@mui/material/Container/Container";
+import { Container } from "react-bootstrap";
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
@@ -43,9 +43,9 @@ const MyCoursesPage: React.FC = () => {
 
   if (isPending)
     return (
-      <div className="FlexJustifyCentr">
+      <Container className="FlexJustifyCentr">
         <Loader />
-      </div>
+      </Container>
     );
 
   return (

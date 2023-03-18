@@ -6,6 +6,7 @@ import React, { useState } from "react";
 import Loader from "../UI/Loader";
 import { useTypedDispatch } from "../store/hooks/useTypedDispatch";
 import { setAlert } from "../store/slices/alertSlice";
+import { Container } from "react-bootstrap";
 
 const ResetPasswordPage = () => {
   const [email, setEmail] = useState<string>("");
@@ -38,45 +39,47 @@ const ResetPasswordPage = () => {
   };
 
   return (
-    <Card
-      sx={{
-        maxWidth: "500px",
-        w: "100%",
-        m: "40px auto 0 auto",
-        p: "10px",
-        boxSizing: "border-box",
-      }}
-    >
-      <TextField
-        label="Email"
-        variant="filled"
-        margin="normal"
-        // error={!!errorMsg.email}
-        // helperText={errorMsg.email}
-        name="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        type="email"
+    <Container>
+      <Card
         sx={{
-          width: "100%",
+          maxWidth: "500px",
+          w: "100%",
+          m: "40px auto 0 auto",
+          p: "10px",
+          boxSizing: "border-box",
         }}
-      />
-      {isLoading ? (
-        <div className="FlexJustifyCentr">
-          <Loader />
-        </div>
-      ) : (
-        <Button
-          variant="contained"
-          type="submit"
-          disabled={isLoading}
-          onClick={resetPassword}
-          sx={{ width: "100%" }}
-        >
-          Сбросить
-        </Button>
-      )}
-    </Card>
+      >
+        <TextField
+          label="Email"
+          variant="filled"
+          margin="normal"
+          // error={!!errorMsg.email}
+          // helperText={errorMsg.email}
+          name="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          type="email"
+          sx={{
+            width: "100%",
+          }}
+        />
+        {isLoading ? (
+          <div className="FlexJustifyCentr">
+            <Loader />
+          </div>
+        ) : (
+          <Button
+            variant="contained"
+            type="submit"
+            disabled={isLoading}
+            onClick={resetPassword}
+            sx={{ width: "100%" }}
+          >
+            Сбросить
+          </Button>
+        )}
+      </Card>
+    </Container>
   );
 };
 

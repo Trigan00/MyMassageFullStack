@@ -1,5 +1,5 @@
 import Button from "@mui/material/Button/Button";
-import Container from "@mui/material/Container/Container";
+import { Container } from "react-bootstrap";
 import React, { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Sanitize from "../helpers/Sanitize";
@@ -50,7 +50,6 @@ const CoursePage: React.FC = () => {
 
   return (
     <Container style={{ marginTop: "20px" }}>
-      <h1>CoursePage</h1>
       <h2>{name}</h2>
       {courseInfo ? (
         <Sanitize html={courseInfo.fullDescription} />

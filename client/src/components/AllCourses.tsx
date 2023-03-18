@@ -1,5 +1,5 @@
-import { Card, Container, DialogTitle } from "@mui/material";
 import React, { useEffect, useState } from "react";
+import { Container } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import Sanitize from "../helpers/Sanitize";
 import useVideos, { Course } from "../hooks/useVideos";
@@ -22,20 +22,22 @@ const AllCourses: React.FC = () => {
   }, [getCourses]);
 
   return (
-    <Container style={{ marginTop: "20px" }}>
-      <DialogTitle style={{ textAlign: "center" }}>Курсы</DialogTitle>
+    <Container fluid>
+      <h1 className="text-center mt-5">Курсы и семинары</h1>
       <div
+        className="course-wrapper"
         style={{
           padding: "15px",
           marginTop: "20px",
           display: "flex",
           justifyContent: "space-around",
+          flexDirection: "column",
         }}
       >
         {!isCoursesLoading ? (
           courses.map(({ name, id, price, shortDescription, pictureUrl }) => (
-            <Card
-              variant="outlined"
+            <div
+              className="course-item"
               key={id}
               onClick={() => navigate(consts.ALLCOURSES_ROUTE + "/" + name)}
               style={{
@@ -46,27 +48,30 @@ const AllCourses: React.FC = () => {
                 display: "flex",
               }}
             >
-              {name}
               <img
                 src={
                   pictureUrl ||
                   "https://media.tenor.com/lVhFnY9tc94AAAAC/anime-dance.gif"
                 }
-                width="200px"
-                height="200px"
-                style={{ display: "block", objectFit: "cover" }}
+                width="854px"
+                height="480px"
+                style={{
+                  display: "block",
+                  backgroundColor: "gray",
+                  borderRadius: "20px",
+                }}
                 alt="CoursePicture"
               />
-              <div>
+              <div className="price-info">
                 <Sanitize html={shortDescription} />
-                <div>
-                  <b>
-                    {price}
-                    &#8381;
-                  </b>
+                <div className="price-wrapper">
+                  <h1 className="p-2 text-center">{price} &#8381;</h1>
+                  <button type="button" className="btn btn-primary btn-lg">
+                    Подробнее
+                  </button>
                 </div>
               </div>
-            </Card>
+            </div>
           ))
         ) : (
           <div className="FlexJustifyCentr">

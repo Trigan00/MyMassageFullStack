@@ -3,10 +3,10 @@ export type errorsTypes = {
 };
 
 export const firebaseErrors: errorsTypes = {
-  "auth/invalid-email": "invalid-email",
-  "auth/user-not-found": "No user corresponding to this email",
-  "auth/email-already-in-use": "The email address is already in use",
-  "auth/invalid-password": "invalid-password",
-  "auth/wrong-password": "wrong-password",
-  "auth/weak-password": "Password should be at least 6 characters",
+  "auth/invalid-email": "недопустимый email",
+  "auth/user-not-found": "Пользователь не найден",
+  "auth/email-already-in-use": "Пользователь с таким email уже существует",
+  "auth/invalid-password": "Неверный пароль",
+  "auth/wrong-password": "Неправильный пароль",
+  "auth/weak-password": "Пароль должен состоять не менее чем из 6 символов",
 };

@@ -59,7 +59,7 @@ const Comments: React.FC<CommentsProps> = ({ commentsVideo, courseName }) => {
                     className={styles.Image}
                     style={{ alignSelf: "center", marginLeft: "5px" }}
                   >
-                    <a href={comment.imageURL} target="_blank">
+                    <a href={comment.imageURL} target="_blank" rel="noreferrer">
                       <img
                         src={comment.imageURL}
                         width="80px"

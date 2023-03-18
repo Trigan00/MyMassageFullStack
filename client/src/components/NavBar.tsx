@@ -37,7 +37,7 @@ const NavBar: React.FC = () => {
   };
 
   return (
-    <Box>
+    <Box style={{ zIndex: "10" }}>
       <AppBar position="static">
         <Container>
           <Toolbar style={{ padding: 0 }}>

@@ -1,4 +1,3 @@
-import Container from "@mui/material/Container/Container";
 import React, { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Feedback from "../components/Feedback";
@@ -9,6 +8,7 @@ import { useHttp } from "../hooks/useHttp";
 import { useTypedDispatch } from "../store/hooks/useTypedDispatch";
 import { setAlert } from "../store/slices/alertSlice";
 import Loader from "../UI/Loader";
+import { Container } from "react-bootstrap";
 
 const LessonPage: React.FC = () => {
   const { request } = useHttp();

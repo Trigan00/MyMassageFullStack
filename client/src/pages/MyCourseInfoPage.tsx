@@ -1,6 +1,5 @@
 import {
   Avatar,
-  Container,
   DialogTitle,
   Icon,
   List,
@@ -9,6 +8,7 @@ import {
   ListItemText,
   Paper,
 } from "@mui/material";
+import { Container } from "react-bootstrap";
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import useVideos, { Video } from "../hooks/useVideos";
