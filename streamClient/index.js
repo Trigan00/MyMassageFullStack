@@ -28,8 +28,8 @@ function createAWSStream(bucketParams) {
         };
 
         const stream = new S3ReadStream(options);
-        stream.moveCursorForward(1024 * 1024);
-        stream.moveCursorBack(1024 * 1024);
+        stream.moveCursorForward();
+        stream.moveCursorBack();
 
         resolve(stream);
       });

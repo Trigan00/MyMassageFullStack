@@ -8,7 +8,6 @@ import {
   ListItemText,
   Paper,
 } from "@mui/material";
-import { Container } from "react-bootstrap";
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
@@ -43,13 +42,13 @@ const MyCoursesPage: React.FC = () => {
 
   if (isPending)
     return (
-      <Container className="FlexJustifyCentr">
+      <div className="FlexJustifyCentr">
         <Loader />
-      </Container>
+      </div>
     );
 
   return (
-    <Container style={{ marginTop: "20px" }}>
+    <div style={{ marginTop: "20px" }}>
       <DialogTitle style={{ textAlign: "center" }}>Список курсов</DialogTitle>
       {!id && <h3>Для просмотра курсов необходима авторизация</h3>}
       <Paper>
@@ -80,7 +79,7 @@ const MyCoursesPage: React.FC = () => {
           )}
         </List>
       </Paper>
-    </Container>
+    </div>
   );
 };
 

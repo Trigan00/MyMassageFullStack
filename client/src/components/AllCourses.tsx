@@ -53,8 +53,8 @@ const AllCourses: React.FC = () => {
                   pictureUrl ||
                   "https://media.tenor.com/lVhFnY9tc94AAAAC/anime-dance.gif"
                 }
-                width="854px"
-                height="480px"
+                width="640px"
+                height="360px"
                 style={{
                   display: "block",
                   backgroundColor: "gray",
@@ -62,10 +62,20 @@ const AllCourses: React.FC = () => {
                 }}
                 alt="CoursePicture"
               />
-              <div className="price-info">
-                <Sanitize html={shortDescription} />
+              <div style={{ display: "flex", flexDirection: "column" }}>
+                <div
+                  className="price-info"
+                  style={{
+                    overflow: "auto",
+                    maxHeight: "242px",
+                    height: "100%",
+                  }}
+                >
+                  <Sanitize html={shortDescription} />
+                </div>
+
                 <div className="price-wrapper">
-                  <h1 className="p-2 text-center">{price} &#8381;</h1>
+                  <h1 className="">{price} &#8381;</h1>
                   <button type="button" className="btn btn-primary btn-lg">
                     Подробнее
                   </button>

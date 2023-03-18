@@ -48,7 +48,7 @@ const NavBar: React.FC = () => {
               style={{ cursor: "pointer" }}
               onClick={() => navigate(consts.HOME_ROUTE)}
             >
-              MyMassage
+              Эльвира Праздникова
             </Box>
             {/* <Button
               color="inherit"
