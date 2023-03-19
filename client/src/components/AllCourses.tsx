@@ -44,8 +44,9 @@ const AllCourses: React.FC = () => {
                 padding: "10px",
                 cursor: "pointer",
                 marginBottom: "20px",
-                width: "fit-content",
+                width: "min-content",
                 height: "fit-content",
+                margin: "15px",
               }}
             >
               <img
