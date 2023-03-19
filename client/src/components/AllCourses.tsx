@@ -30,8 +30,8 @@ const AllCourses: React.FC = () => {
           padding: "15px",
           marginTop: "20px",
           display: "flex",
-          justifyContent: "space-around",
-          flexDirection: "column",
+          justifyContent: "center",
+          flexWrap: "wrap",
         }}
       >
         {!isCoursesLoading ? (
@@ -45,7 +45,7 @@ const AllCourses: React.FC = () => {
                 cursor: "pointer",
                 marginBottom: "20px",
                 width: "fit-content",
-                display: "flex",
+                height: "fit-content",
               }}
             >
               <img
@@ -62,24 +62,33 @@ const AllCourses: React.FC = () => {
                 }}
                 alt="CoursePicture"
               />
-              <div style={{ display: "flex", flexDirection: "column" }}>
-                <div
-                  className="price-info"
-                  style={{
-                    overflow: "auto",
-                    maxHeight: "242px",
-                    height: "100%",
-                  }}
-                >
-                  <Sanitize html={shortDescription} />
-                </div>
 
-                <div className="price-wrapper">
-                  <h1 className="">{price} &#8381;</h1>
-                  <button type="button" className="btn btn-primary btn-lg">
-                    Подробнее
-                  </button>
-                </div>
+              <div
+                className="price-info"
+                style={{
+                  overflow: "auto",
+                  maxHeight: "200px",
+                  height: "100%",
+                }}
+              >
+                <Sanitize html={shortDescription} />
+              </div>
+
+              <div
+                style={{
+                  marginTop: "10px",
+                  borderTop: "1px solid lightgrey",
+                  width: "100%",
+                }}
+              ></div>
+              <div
+                className="price-wrapper"
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
+                <h1 className="">{price} &#8381;</h1>
               </div>
             </div>
           ))

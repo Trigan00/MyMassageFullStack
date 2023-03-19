@@ -7,6 +7,9 @@ const s3 = new EasyYandexS3({
   },
   Bucket: process.env.BUCKET,
   debug: true,
+  // httpOptions: {
+  //   timeout: 900000, // 15 minutes
+  // },
 });
 
 const picturesS3 = new EasyYandexS3({

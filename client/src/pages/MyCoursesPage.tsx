@@ -1,5 +1,6 @@
 import {
   Avatar,
+  Container,
   DialogTitle,
   Icon,
   List,
@@ -9,7 +10,7 @@ import {
   Paper,
 } from "@mui/material";
 import React, { useCallback, useEffect, useState } from "react";
-import { Container } from "react-bootstrap";
+// import { Container } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { useAuthState } from "../hooks/useAuthState";
@@ -19,7 +20,7 @@ import { consts } from "../utils/routsConsts";
 
 const MyCoursesPage: React.FC = () => {
   const { request, loading } = useHttp();
-  const { id, token } = useAuth();
+  const { id, token, isAuth } = useAuth();
   const { isPending } = useAuthState();
   const navigate = useNavigate();
   const [courses, setCourses] = useState<string[]>([]);
@@ -43,15 +44,23 @@ const MyCoursesPage: React.FC = () => {
 
   if (isPending)
     return (
-      <Container className="FlexJustifyCentr">
+      <div className="FlexJustifyCentr">
         <Loader />
+      </div>
+    );
+
+  if (!isAuth) {
+    return (
+      <Container style={{ marginTop: "20px" }}>
+        <h3>Для просмотра курсов необходима авторизация</h3>
       </Container>
     );
+  }
 
   return (
     <Container style={{ marginTop: "20px" }}>
       <DialogTitle style={{ textAlign: "center" }}>Список курсов</DialogTitle>
-      {!id && <h3>Для просмотра курсов необходима авторизация</h3>}
+      {/* {!id && <h3>Для просмотра курсов необходима авторизация</h3>} */}
       <Paper>
         <List>
           {!loading ? (

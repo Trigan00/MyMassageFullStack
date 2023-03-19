@@ -198,7 +198,7 @@ router.get("/feedback", async (req, res) => {
 
     const doc = await videoRef.get();
     if (!doc.exists) {
-      return res.status(400).json({ message: "No such document!" });
+      return res.status(200).json({ message: "No such document!" });
     }
 
     return res

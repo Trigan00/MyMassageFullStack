@@ -60,22 +60,22 @@ const LessonPage: React.FC = () => {
       <span>Video Name: {data.name}</span>
       <Sanitize html={data.description} />
       <div
-        className="FlexJustifyCentr"
-        // style={{ position: "relative", paddingTop: "56.25%" }}
+        className="FlexJustifyCentr videoContainer"
+        style={{ maxWidth: "1200px", maxHeight: "550px", margin: "0 auto" }}
       >
         <video
           id="videoPlayer"
-          width="100%"
+          width="500px"
+          height="200px"
           controls
           autoPlay
           controlsList="nodownload"
-          // style={{
-          //   position: "absolute",
-          //   left: "0",
-          //   top: "0",
-          //   width: "100%",
-          //   height: "auto",
-          // }}
+          style={{
+            width: "100%",
+            height: "auto",
+            maxHeight: "100%",
+            maxWidth: "100%",
+          }}
         >
           <source
             src={`${process.env.REACT_APP_SERVERURL}/api/courses/video/=${courseName}=${id}`}
