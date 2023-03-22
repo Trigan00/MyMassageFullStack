@@ -49,6 +49,7 @@ const AllCourses: React.FC = () => {
                 margin: "15px",
               }}
             >
+              <h3 style={{ textAlign: "center" }}>{name}</h3>
               <img
                 src={
                   pictureUrl ||
@@ -68,8 +69,8 @@ const AllCourses: React.FC = () => {
                 className="price-info"
                 style={{
                   overflow: "auto",
-                  maxHeight: "200px",
-                  height: "100%",
+                  height: "120px",
+                  // height: "100%",
                 }}
               >
                 <Sanitize html={shortDescription} />
