@@ -18,7 +18,7 @@ app.use(cookieParser());
 app.use(cors());
 
 app.use("/api/auth", authRouter);
-app.use("/api/buy", authMiddleware.decodeToken, buyCourse);
+app.use("/api/buy", /* authMiddleware.decodeToken, */ buyCourse);
 app.use("/api/admin", authMiddleware.isAdmin, adminRouter);
 app.use("/api/courses", authMiddleware.decodeToken, lessonRouter);
 

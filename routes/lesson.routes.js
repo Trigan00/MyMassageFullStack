@@ -50,6 +50,16 @@ router.get("/lesson/:key", async (req, res) => {
     const id = key.split("-")[0];
     const category = key.split("-")[1];
 
+    const userRef = db.collection("users").doc(req.user.uid);
+    const user = await userRef.get();
+    const userCourses = user.data().courses;
+    if (!userCourses.includes(category)) {
+      return res.status(400).json({
+        status: "failure",
+        message: "Нет доступа",
+      });
+    }
+
     const videoRef = db.collection(category).doc(id);
 
     const doc = await videoRef.get();

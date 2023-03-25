@@ -8,6 +8,8 @@ import { useHttp } from "../hooks/useHttp";
 import useVideos, { Course } from "../hooks/useVideos";
 import Loader from "../UI/Loader";
 import { consts } from "../utils/routsConsts";
+import { useTypedDispatch } from "../store/hooks/useTypedDispatch";
+import { setAlert } from "../store/slices/alertSlice";
 
 const CoursePage: React.FC = () => {
   const { name } = useParams();
@@ -15,6 +17,7 @@ const CoursePage: React.FC = () => {
   const { request, loading } = useHttp();
   const { getCourses } = useVideos();
   const navigate = useNavigate();
+  const dispatch = useTypedDispatch();
   const [courseInfo, setCourseInfo] = useState<Course>();
   const [isBought, setIsBought] = useState<boolean>(false);
 
@@ -52,25 +55,49 @@ const CoursePage: React.FC = () => {
   }, [fetchCourse, checkCourses, id]);
 
   const buyCourseHandler = async () => {
-    if (id) {
+    if (!id) {
+      return dispatch(
+        setAlert({
+          severity: "warning",
+          message: "Для покупки курса необходима авторизация",
+        })
+      );
+    }
+    if (!isBought) {
+      if (!courseInfo) return;
       try {
-        if (!isBought) {
-          await request(
-            `${process.env.REACT_APP_SERVERURL}/api/buy/course`,
-            "POST",
-            {
-              id,
-              courseName: name,
-            },
-            {
-              authorization: "Bearer " + token,
-            }
+        const res = await request(
+          `${process.env.REACT_APP_SERVERURL}/api/buy/createPayment`,
+          "POST",
+          {
+            userId: id,
+            courseId: courseInfo.id,
+          },
+          {
+            authorization: "Bearer " + token,
+          }
+        );
+
+        if (res) {
+          setIsBought(true);
+          dispatch(
+            setAlert({
+              severity: "success",
+              message: res.message,
+            })
           );
-          navigate(consts.MYCOURSES_ROUTE + "/" + name);
-        } else {
-          navigate(consts.MYCOURSES_ROUTE + "/" + name);
         }
-      } catch (e) {}
+      } catch (e: any) {
+        console.log(e);
+        dispatch(
+          setAlert({
+            severity: "error",
+            message: JSON.parse(e.message).message,
+          })
+        );
+      }
+    } else {
+      navigate(consts.MYCOURSES_ROUTE + "/" + name);
     }
   };
 
