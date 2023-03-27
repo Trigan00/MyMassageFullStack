@@ -10,10 +10,14 @@ import CoursePage from "./pages/CoursePage";
 import MyCoursesPage from "./pages/MyCoursesPage";
 import MyCourseInfoPage from "./pages/MyCourseInfoPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
+import BuyCoursePage from "./pages/BuyCoursePage";
 
-// export const authRoutes = [
-//   //Можно добавить роут оплаты прайма
-// ];
+export const authRoutes = [
+  {
+    path: consts.BUY_COURSE_ROUTE + "/:id",
+    Component: BuyCoursePage,
+  },
+];
 
 export const adminRoutes = [
   {

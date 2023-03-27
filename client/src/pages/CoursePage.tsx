@@ -13,7 +13,7 @@ import { setAlert } from "../store/slices/alertSlice";
 
 const CoursePage: React.FC = () => {
   const { name } = useParams();
-  const { id, token } = useAuth();
+  const { id, token, email } = useAuth();
   const { request, loading } = useHttp();
   const { getCourses } = useVideos();
   const navigate = useNavigate();
@@ -64,14 +64,15 @@ const CoursePage: React.FC = () => {
       );
     }
     if (!isBought) {
-      if (!courseInfo) return;
       try {
+        // return navigate(consts.BUY_COURSE_ROUTE + "/" + courseInfo?.id);
         const res = await request(
           `${process.env.REACT_APP_SERVERURL}/api/buy/createPayment`,
           "POST",
           {
             userId: id,
-            courseId: courseInfo.id,
+            courseId: courseInfo?.id,
+            email,
           },
           {
             authorization: "Bearer " + token,
@@ -79,13 +80,13 @@ const CoursePage: React.FC = () => {
         );
 
         if (res) {
-          setIsBought(true);
-          dispatch(
-            setAlert({
-              severity: "success",
-              message: res.message,
-            })
-          );
+          // dispatch(
+          //   setAlert({
+          //     severity: "success",
+          //     message: res.message,
+          //   })
+          // );
+          window.location.href = res.payment.confirmation.confirmation_url;
         }
       } catch (e: any) {
         console.log(e);

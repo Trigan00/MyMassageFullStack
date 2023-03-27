@@ -10,15 +10,45 @@ const checkout = new YooCheckout({
   secretKey: process.env.SHOP_SECRET_KEY,
 });
 
+const receiptCreator = (email, type, item) => {
+  return {
+    send: true,
+    customer: {
+      email: email,
+    },
+    settlements: [
+      {
+        type: "cashless",
+        amount: {
+          value: item.price.toFixed(2),
+          currency: "RUB",
+        },
+      },
+    ],
+    type: type,
+    items: [
+      {
+        description: item.name,
+        quantity: "1.000",
+        amount: {
+          value: item.price.toFixed(2),
+          currency: "RUB",
+        },
+        vat_code: 1,
+      },
+    ],
+  };
+};
+
 router.post("/createPayment", async (req, res) => {
   try {
-    const { userId, courseId } = req.body;
+    const { userId, courseId, email } = req.body;
     const userRef = db.collection("users").doc(userId);
     const user = await userRef.get();
     if (!user.exists) {
       return res.status(400).json({
         status: "failure",
-        message: "Пользователя не существует",
+        message: "Для покупки курса необходима авторизация",
       });
     }
     const courseRef = db.collection("courses").doc(courseId);
@@ -45,6 +75,10 @@ router.post("/createPayment", async (req, res) => {
         return_url: process.env.MyCoursesUrl,
       },
       description: doc.data().name,
+      receipt: receiptCreator(email, "payment", {
+        name: doc.data().name,
+        price: doc.data().price,
+      }),
     };
     const idempotenceKey = uuid.v4();
     const payment = await checkout.createPayment(createPayload, idempotenceKey);
@@ -58,8 +92,8 @@ router.post("/createPayment", async (req, res) => {
       courseName: payment.description,
     });
 
-    return res.status(201).redirect(payment.confirmation.confirmation_url);
-    // return res.status(201).json({ payment });
+    // return res.status(201).redirect(payment.confirmation.confirmation_url);
+    return res.status(201).json({ payment });
   } catch (error) {
     console.log(error);
     res.status(500).json({
@@ -73,6 +107,7 @@ router.post("/status", async (req, res) => {
   try {
     const dto = req.body;
     const orderRef = db.collection("orders").doc(dto.object.id);
+
     if (dto.event === "payment.waiting_for_capture") {
       console.log("payment.waiting_for_capture");
       const doc = await orderRef.get();
@@ -80,12 +115,13 @@ router.post("/status", async (req, res) => {
         dto.object.id,
         {
           amount: dto.object.amount,
-          recipient: dto.object.recipient,
+          // recipient: dto.object.recipient,
         },
         doc.data().idempotenceKey
       );
       return res.status(201).json({ status: "success", payment: payment });
     }
+
     if (dto.event === "payment.succeeded") {
       console.log("payment.succeeded");
       await orderRef.update({
@@ -100,6 +136,7 @@ router.post("/status", async (req, res) => {
           doc.data().courseName
         ),
       });
+
       return res
         .status(201)
         .json({ status: "success", message: "Курс добавлен в ваш аккаунт" });
